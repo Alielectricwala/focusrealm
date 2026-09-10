@@ -2,7 +2,6 @@ import {
   BookMarked,
   CalendarClock,
   GraduationCap,
-  ListChecks,
   Star,
   Sun,
   type LucideIcon,
@@ -31,7 +30,6 @@ export const NAV: NavItem[] = [
     matches: ["/paths", "/forums", "/feedback", "/notifications"],
   },
   { href: "/progress", label: "Service record", short: "Record", Icon: Star },
-  { href: "/onboarding", label: "Onboarding", short: "Onboard", Icon: ListChecks },
 ];
 
 /** Sub-navigation that lives inside the Courses section. */

@@ -26,8 +26,6 @@ interface Persisted {
   /** Service recovery steps worked through, keyed by step key. */
   recoverySteps: Record<string, boolean>;
   feedbackSent: boolean;
-  /** Onboarding checklist ticks, keyed by task id. */
-  onboardingChecks: Record<string, boolean>;
 }
 
 interface Snapshot extends Persisted {
@@ -44,7 +42,6 @@ const EMPTY: Persisted = {
   handoverSent: false,
   recoverySteps: {},
   feedbackSent: false,
-  onboardingChecks: {},
 };
 
 const SERVER_SNAPSHOT: Snapshot = { ...EMPTY, ready: false };
@@ -161,13 +158,6 @@ export function useStaffState() {
     update((prev) => (prev.feedbackSent ? null : { ...prev, feedbackSent: true }));
   }, []);
 
-  const toggleOnboardingTask = useCallback((id: string) => {
-    update((prev) => ({
-      ...prev,
-      onboardingChecks: { ...prev.onboardingChecks, [id]: !prev.onboardingChecks[id] },
-    }));
-  }, []);
-
   return useMemo(
     () => ({
       ...state,
@@ -181,7 +171,6 @@ export function useStaffState() {
       sendHandover,
       toggleRecoveryStep,
       sendFeedback,
-      toggleOnboardingTask,
     }),
     [
       state,
@@ -195,7 +184,6 @@ export function useStaffState() {
       sendHandover,
       toggleRecoveryStep,
       sendFeedback,
-      toggleOnboardingTask,
     ],
   );
 }
