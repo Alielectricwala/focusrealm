@@ -36,6 +36,10 @@ function StaffIdentity({ dark }: { dark?: boolean }) {
 export default function AppShell({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
   const { readNotifications } = useStaffState();
+
+  // The intern onboarding module is a separate internal tool, not part of the
+  // hospitality product demo — it brings its own chrome.
+  if (pathname.startsWith("/onboarding")) return <>{children}</>;
   const unread = NOTIFICATIONS.filter(
     (n) => !readNotifications.includes(n.id),
   ).length;

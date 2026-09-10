@@ -126,3 +126,79 @@ lib/
 
 Next.js 16 (App Router) · TypeScript · Tailwind CSS v4 · lucide-react.
 Vercel-standard layout; `npm run build` and `npm run lint` are clean.
+
+---
+
+# Intern onboarding module
+
+A second, unrelated app living in the same repo under `/onboarding`: the
+internal flow that takes a selected Focus Realm intern from offer to first day.
+It has its own navy-and-gold chrome and does not appear anywhere in the
+hospitality product above.
+
+## The flow
+
+| | Candidate | Founders |
+|---|---|---|
+| 1 | Submits full name, parent's name, address, Aadhaar number and a copy of the card | |
+| 2 | Reads both handbooks, watches both video briefings | |
+| 3 | Passes both assessments — **75% each, judged separately**, unlimited retakes | |
+| 4 | Reviews the agreement, generated from their own details, and e-signs it | |
+| 5 | | Verifies the signature, or sends it back with a note |
+| 6 | Requests a mailbox | Creates it on SpaceMail, records the address and password |
+| 7 | Collects the password **once**, with IMAP/SMTP settings and Outlook steps | |
+
+Stages are derived from the record itself (`lib/onboarding/stage.ts`), so a
+candidate can never be in a state their data does not support. Each step is
+enforced server-side, not just hidden in the UI.
+
+## Routes
+
+```
+/onboarding                     Landing — paste your invite link
+/onboarding/[token]             The candidate's whole onboarding
+/onboarding/admin               Founders' console (passcode)
+/onboarding/admin/[id]          One candidate: documents and decisions
+/api/onboarding/…               Everything above talks to these
+```
+
+## Setup
+
+```bash
+cp .env.example .env.local     # then fill both values in
+npm run dev
+```
+
+Open `/onboarding/admin`, create a candidate, and send them the generated link.
+
+## Handling of personal data
+
+- **Aadhaar uploads never enter `public/`.** They are written to
+  `ONBOARDING_DATA_DIR` with mode `0600` under a random filename, and stream
+  only through an admin-authenticated route.
+- **The Aadhaar number is masked everywhere but the founders' console** —
+  including in the candidate's own view and on the rendered agreement.
+- **Temporary mailbox passwords are encrypted at rest** (AES-256-GCM) and
+  destroyed after a single view.
+- **Assessment answer keys stay server-side** (`tests.server.ts`); submissions
+  are scored on the server, so the 75% gate cannot be bypassed from the browser.
+- The onboarding link is a bearer credential. Anyone holding it can act as that
+  candidate, so treat it like a password.
+
+Before real candidate data goes in, confirm: where the data directory actually
+lives and who can read it, how long records are kept, and legal review of the
+agreement template.
+
+## Storage
+
+`lib/onboarding/store.server.ts` is a JSON-file adapter — fine locally or on
+any host with a persistent disk, **not** on ephemeral serverless filesystems
+(Vercel included). Swapping it for a database client is the only change needed;
+nothing else touches storage.
+
+## Content
+
+Handbooks and the agreement template live in `content/onboarding/` and are the
+source of truth. Assessment questions are in `lib/onboarding/tests.server.ts`,
+twelve per handbook, each traceable to a section. Video links and SpaceMail
+settings are in `lib/onboarding/content.ts`.

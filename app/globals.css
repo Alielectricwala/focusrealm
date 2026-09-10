@@ -32,6 +32,31 @@ a,
   display: none;
 }
 
+/* Intern onboarding module — Focus Realm navy & gold, scoped to its routes. */
+.fr-root {
+  --fr-navy-deep: #081527;
+  --fr-navy: #0e2038;
+  --fr-navy-soft: #16304f;
+  --fr-line: #21456e;
+  --fr-gold: #c9a227;
+  --fr-gold-soft: #e0c368;
+  --fr-paper: #f5f3ef;
+  --fr-muted: #90a4c0;
+
+  background-color: var(--fr-navy-deep);
+  color: var(--fr-paper);
+}
+
+.fr-card {
+  background-color: var(--fr-navy);
+  border: 1px solid var(--fr-line);
+  border-radius: 1rem;
+}
+
+.fr-rule {
+  border-color: var(--fr-line);
+}
+
 @keyframes mise-pop {
   from {
     opacity: 0;
