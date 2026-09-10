@@ -212,6 +212,33 @@ export interface Handover {
   checklist: { id: string; label: string }[];
 }
 
+/** One action in the new-hire onboarding checklist. */
+export interface OnboardingTask {
+  id: string;
+  title: string;
+  detail: string;
+  /** Route to the page that carries this task out. */
+  href?: string;
+  linkLabel?: string;
+}
+
+/** A window of the onboarding timeline, e.g. "Before day one". */
+export interface OnboardingSection {
+  id: string;
+  title: string;
+  window: string;
+  tasks: OnboardingTask[];
+}
+
+/** Who is guiding this staff member through onboarding, and by when. */
+export interface OnboardingProfile {
+  buddyName: string;
+  buddyTitle: string;
+  buddyInitials: string;
+  startDate: string;
+  targetCompleteBy: string;
+}
+
 export type RecoveryStepKey = "listen" | "acknowledge" | "resolve" | "follow-up";
 
 export interface RecoveryStep {

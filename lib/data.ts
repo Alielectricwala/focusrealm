@@ -4,6 +4,8 @@ import type {
   Handover,
   JobRole,
   LearningPath,
+  OnboardingProfile,
+  OnboardingSection,
   ServiceRecord,
   ServiceRecovery,
   ShiftCheckpoint,
@@ -829,6 +831,111 @@ export const PATH: LearningPath = {
     { id: "step-suite", title: "Suite Arrival Standard", sopId: "hsk-104", state: "locked" },
   ],
 };
+
+/* -------------------------------------------------------------------------- */
+/* Onboarding                                                                  */
+/* -------------------------------------------------------------------------- */
+
+export const ONBOARDING_PROFILE: OnboardingProfile = {
+  buddyName: "Nirosha Perera",
+  buddyTitle: "Floor Supervisor",
+  buddyInitials: "NP",
+  startDate: "6 Jul",
+  targetCompleteBy: "20 Jul",
+};
+
+export const ONBOARDING_SECTIONS: OnboardingSection[] = [
+  {
+    id: "before-day-one",
+    title: "Before your first shift",
+    window: "Complete before 6 Jul",
+    tasks: [
+      {
+        id: "ob-paperwork",
+        title: "Submit HR paperwork",
+        detail:
+          "Contract, tax forms and emergency contact — sent to HR by your buddy, sign and return.",
+      },
+      {
+        id: "ob-uniform",
+        title: "Uniform fitting",
+        detail: "Collect and fit two housekeeping uniforms plus your name badge at Stores.",
+      },
+      {
+        id: "ob-access",
+        title: "Property access set up",
+        detail: "Key card, staff entrance code and locker assigned by Security.",
+      },
+    ],
+  },
+  {
+    id: "day-one",
+    title: "Day one",
+    window: "6 Jul",
+    tasks: [
+      {
+        id: "ob-tour",
+        title: "Property tour",
+        detail:
+          "Back-of-house route, floor pantries, staff canteen, and the muster point for fire drills.",
+      },
+      {
+        id: "ob-meet-team",
+        title: "Meet your floor team",
+        detail: "Introductions with Housekeeping and your on-shift supervisor, Nirosha Perera.",
+      },
+      {
+        id: "ob-library",
+        title: "Walk the SOP library",
+        detail: "See how standards are organised by job role and hashtag before you need one.",
+        href: "/library",
+        linkLabel: "Open SOPs",
+      },
+      {
+        id: "ob-first-brief",
+        title: "Read the Room Reset Operating Brief",
+        detail: "The brief behind HSK-101 — the standard you'll run most this week.",
+        href: "/courses",
+        linkLabel: "Open Courses",
+      },
+    ],
+  },
+  {
+    id: "first-two-weeks",
+    title: "First two weeks",
+    window: "Complete by 20 Jul",
+    tasks: [
+      {
+        id: "ob-shadow",
+        title: "Shadow two full rooms with a senior attendant",
+        detail: "Watch the trolley staging, the phase order, and the door check up close.",
+      },
+      {
+        id: "ob-path",
+        title: "Start the Room Attendant Path",
+        detail: "Your sequential curriculum — each step unlocks once your supervisor signs off.",
+        href: "/paths",
+        linkLabel: "Open Paths",
+      },
+      {
+        id: "ob-first-run",
+        title: "Run HSK-101 under supervision",
+        detail: "Your first live reset, timed against the target with Nirosha watching.",
+        href: "/sop/hsk-101/practice",
+        linkLabel: "Open runner",
+      },
+      {
+        id: "ob-checkin",
+        title: "Two-week check-in with your supervisor",
+        detail: "A short conversation on how the first fortnight went and what's next.",
+      },
+    ],
+  },
+];
+
+export function onboardingTaskCount(): number {
+  return ONBOARDING_SECTIONS.reduce((total, section) => total + section.tasks.length, 0);
+}
 
 export const FORUM_THREADS: ForumThread[] = [
   {
