@@ -173,9 +173,9 @@ Open `/onboarding/admin`, create a candidate, and send them the generated link.
 
 ## Handling of personal data
 
-- **Aadhaar uploads never enter `public/`.** They are written to
-  `ONBOARDING_DATA_DIR` with mode `0600` under a random filename, and stream
-  only through an admin-authenticated route.
+- **Aadhaar uploads never enter `public/`.** They go to a private Supabase
+  bucket under a random filename, and stream only through an
+  admin-authenticated route.
 - **The Aadhaar number is masked everywhere but the founders' console** —
   including in the candidate's own view and on the rendered agreement.
 - **Temporary mailbox passwords are encrypted at rest** (AES-256-GCM) and
@@ -185,16 +185,36 @@ Open `/onboarding/admin`, create a candidate, and send them the generated link.
 - The onboarding link is a bearer credential. Anyone holding it can act as that
   candidate, so treat it like a password.
 
-Before real candidate data goes in, confirm: where the data directory actually
-lives and who can read it, how long records are kept, and legal review of the
-agreement template.
+Before real candidate data goes in, confirm: which Supabase region the project
+sits in (Aadhaar data of Indian residents is worth keeping in `ap-south-1`),
+who holds the service-role key, how long records are kept, and legal review of
+the agreement template.
 
 ## Storage
 
-`lib/onboarding/store.server.ts` is a JSON-file adapter — fine locally or on
-any host with a persistent disk, **not** on ephemeral serverless filesystems
-(Vercel included). Swapping it for a database client is the only change needed;
-nothing else touches storage.
+Supabase, reached only from `lib/onboarding/store.server.ts`:
+
+| | |
+|---|---|
+| `public.onboarding_candidates` | One row per candidate — the record as `jsonb`, plus indexed `id`/`token`/`created_at` and a `version` for optimistic concurrency |
+| `onboarding-aadhaar` bucket | The uploaded Aadhaar copies, private |
+
+Both have **RLS enabled with no policies at all**, so the anon key cannot touch
+either one. The service-role key is the only way in, and it is used
+server-side only. Concurrent writes retry against fresh state rather than
+overwriting, so quick successive actions can't clobber each other.
+
+## Deploying to Vercel
+
+1. Import the repo — Next.js is detected, no build settings needed.
+2. Set all four variables from `.env.example` in **Settings → Environment
+   Variables**. `SUPABASE_SERVICE_ROLE_KEY` must be server-side only: do not
+   give it a `NEXT_PUBLIC_` prefix.
+3. Deploy.
+
+`next.config.ts` carries an `outputFileTracingIncludes` entry for the handbook
+route — the PDFs are read from a path built at runtime, which the file tracer
+cannot follow on its own. Without it the handbooks 500 in production.
 
 ## Content
 
