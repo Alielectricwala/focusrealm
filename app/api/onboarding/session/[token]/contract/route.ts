@@ -39,12 +39,17 @@ export async function POST(
   }
 
   const body = (await request.json().catch(() => null)) as
-    | { typedName?: string; affirmed?: boolean }
+    | { typedName?: string; affirmed?: boolean; electronicSignatureConsent?: boolean }
     | null;
 
   const typedName = body?.typedName?.trim();
   if (!typedName) return error("Type your full name to sign.");
   if (body?.affirmed !== true) return error("Confirm the declaration before signing.");
+  if (body?.electronicSignatureConsent !== true) {
+    return error(
+      "Confirm that you have read the agreement and consent to signing it electronically.",
+    );
+  }
 
   // Guards against signing with someone else's name, ignoring case and spacing.
   const normalise = (value: string) => value.toLowerCase().replace(/\s+/g, " ").trim();
@@ -58,6 +63,7 @@ export async function POST(
   const signature: Signature = {
     typedName,
     affirmed: true,
+    electronicSignatureConsent: true,
     signedAt: new Date().toISOString(),
     ip: clientIp(request),
     userAgent: request.headers.get("user-agent"),

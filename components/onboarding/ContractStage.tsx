@@ -5,6 +5,7 @@ import { Clock, FileSignature, Printer } from "lucide-react";
 import type { Contract } from "@/lib/onboarding/contract";
 import type { CandidateView, Signature } from "@/lib/onboarding/types";
 import ContractDocument from "./ContractDocument";
+import { SIGNING_CONSENT } from "@/lib/onboarding/compliance";
 import { Button, Card, Field, Notice, SectionTitle, formatDateTime, inputClass, inputStyle } from "./ui";
 
 /** Steps four and five: review and sign, then wait for the founders to verify. */
@@ -23,6 +24,7 @@ export default function ContractStage({
   const [signature, setSignature] = useState<Signature | null>(null);
   const [typedName, setTypedName] = useState("");
   const [affirmed, setAffirmed] = useState(false);
+  const [signingConsent, setSigningConsent] = useState(false);
   const [busy, setBusy] = useState(false);
   const [message, setMessage] = useState<string | null>(null);
 
@@ -63,7 +65,11 @@ export default function ContractStage({
     const response = await fetch(`/api/onboarding/session/${token}/contract`, {
       method: "POST",
       headers: { "content-type": "application/json" },
-      body: JSON.stringify({ typedName, affirmed }),
+      body: JSON.stringify({
+        typedName,
+        affirmed,
+        electronicSignatureConsent: signingConsent,
+      }),
     });
     const data = await response.json();
     setBusy(false);
@@ -155,9 +161,34 @@ export default function ContractStage({
               </span>
             </label>
 
+            <label className="flex cursor-pointer items-start gap-3">
+              <input
+                type="checkbox"
+                checked={signingConsent}
+                onChange={(e) => setSigningConsent(e.target.checked)}
+                className="mt-1 size-4 shrink-0 accent-[var(--fr-gold)]"
+              />
+              <span className="min-w-0">
+                <span className="block text-sm leading-snug text-pretty">
+                  {SIGNING_CONSENT.label}
+                </span>
+                {SIGNING_CONSENT.detail && (
+                  <span
+                    className="mt-1 block text-xs leading-relaxed"
+                    style={{ color: "var(--fr-muted)" }}
+                  >
+                    {SIGNING_CONSENT.detail}
+                  </span>
+                )}
+              </span>
+            </label>
+
             {message && <Notice tone="bad">{message}</Notice>}
 
-            <Button disabled={busy || !typedName.trim() || !affirmed} onClick={sign}>
+            <Button
+              disabled={busy || !typedName.trim() || !affirmed || !signingConsent}
+              onClick={sign}
+            >
               <FileSignature className="size-4" aria-hidden />
               {busy ? "Signing…" : "Sign agreement"}
             </Button>

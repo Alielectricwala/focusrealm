@@ -59,9 +59,11 @@ export function toCandidateView(candidate: Candidate): CandidateView {
           phone: details.phone,
           aadhaarFile: details.aadhaarFile,
           submittedAt: details.submittedAt,
+          consent: details.consent,
           aadhaarLast4: details.aadhaarNumber.slice(-4),
         }
       : null,
+    consent: candidate.details?.consent ?? null,
     resources: candidate.resources,
     tests: candidate.tests,
     signedAt: candidate.signature?.signedAt ?? null,

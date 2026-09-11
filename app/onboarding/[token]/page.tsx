@@ -1,6 +1,7 @@
 "use client";
 
 import { useCallback, useEffect, useState } from "react";
+import Link from "next/link";
 import { useParams } from "next/navigation";
 import { PartyPopper } from "lucide-react";
 import ContractStage from "@/components/onboarding/ContractStage";
@@ -105,11 +106,19 @@ export default function CandidatePortal() {
         <MailboxStage token={token} candidate={candidate} onSaved={onSaved} locked={at < 5} />
       </div>
 
-      <footer className="mt-10 border-t pt-6 fr-rule">
+      <footer className="mt-10 space-y-4 border-t pt-6 fr-rule">
         <Notice>
           Something not right, or stuck on a step? Reply to the email your invitation came from —
           Ali or Sehej will sort it out.
         </Notice>
+        <p className="text-xs leading-relaxed" style={{ color: "var(--fr-muted)" }}>
+          Your personal data is handled under the{" "}
+          <Link href="/onboarding/privacy" className="underline" style={{ color: "var(--fr-gold-soft)" }}>
+            onboarding privacy notice
+          </Link>
+          . You can ask to see, correct or erase your data, or withdraw your consent, at any
+          time — including after your internship starts.
+        </p>
       </footer>
     </Shell>
   );

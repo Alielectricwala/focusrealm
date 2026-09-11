@@ -44,6 +44,29 @@ export interface CandidateDetails {
   phone: string;
   aadhaarFile: StoredFile | null;
   submittedAt: string;
+  /** Captured in the same request that submitted these details. */
+  consent: ConsentRecord;
+}
+
+/**
+ * Proof that consent was given: which notice the candidate read, what they
+ * ticked, and when. Kept so the Company can evidence consent under the DPDP
+ * Act, and so a change to the notice never rewrites what someone agreed to.
+ */
+export interface ConsentRecord {
+  /** The notice text version in force when consent was given. */
+  noticeVersion: string;
+  /** Ids from CONSENT_ITEMS — every required one, or the record is not written. */
+  acceptedItems: string[];
+  at: string;
+  ip: string | null;
+  userAgent: string | null;
+}
+
+/** One founder opening a candidate's Aadhaar copy. Aadhaar access is logged. */
+export interface AadhaarAccess {
+  at: string;
+  ip: string | null;
 }
 
 export interface StoredFile {
@@ -67,6 +90,8 @@ export interface TestAttempt {
 export interface Signature {
   typedName: string;
   affirmed: boolean;
+  /** Separate, explicit consent to conclude the agreement electronically. */
+  electronicSignatureConsent?: boolean;
   signedAt: string;
   ip: string | null;
   userAgent: string | null;
@@ -106,6 +131,8 @@ export interface Candidate {
   /** Test id → every attempt, oldest first. */
   tests: Record<string, TestAttempt[]>;
   signature?: Signature;
+  /** Appended each time a founder opens the Aadhaar copy. Newest last. */
+  aadhaarAccess?: AadhaarAccess[];
   contractVerifiedAt?: string;
   contractRejection?: { note: string; at: string };
   emailRequestedAt?: string;
@@ -123,6 +150,8 @@ export interface CandidateView {
   details: (Omit<CandidateDetails, "aadhaarNumber"> & {
     aadhaarLast4: string;
   }) | null;
+  /** So the portal can show the candidate what they agreed to, and when. */
+  consent: ConsentRecord | null;
   resources: Record<string, string>;
   tests: Record<string, TestAttempt[]>;
   signedAt: string | null;

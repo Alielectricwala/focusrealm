@@ -79,6 +79,8 @@ export default function AdminCandidatePage() {
   }
 
   const { details } = candidate;
+  const consent = details?.consent ?? null;
+  const accessLog = candidate.aadhaarAccess ?? [];
 
   return (
     <div className="mx-auto w-full max-w-3xl px-4 py-8 sm:px-6 lg:py-12">
@@ -137,6 +139,54 @@ export default function AdminCandidatePage() {
                 <Detail label="Address" value={details.address} />
               </div>
             </dl>
+
+            {consent && (
+              <div
+                className="mt-5 rounded-xl border p-4"
+                style={{ borderColor: "var(--fr-line)", backgroundColor: "var(--fr-navy-deep)" }}
+              >
+                <p
+                  className="text-xs font-bold tracking-[0.16em] uppercase"
+                  style={{ color: "var(--fr-gold)" }}
+                >
+                  Consent on record
+                </p>
+                <p className="mt-2 text-xs leading-relaxed" style={{ color: "var(--fr-muted)" }}>
+                  Notice version {consent.noticeVersion}, accepted{" "}
+                  {formatDateTime(consent.at)}
+                  {consent.ip ? ` from ${consent.ip}` : ""}.
+                </p>
+                <ul className="mt-2 flex flex-wrap gap-1.5">
+                  {consent.acceptedItems.map((item) => (
+                    <li
+                      key={item}
+                      className="rounded-md px-2 py-0.5 font-mono text-[11px]"
+                      style={{ backgroundColor: "var(--fr-navy-soft)", color: "var(--fr-muted)" }}
+                    >
+                      {item}
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            )}
+
+            {details.aadhaarFile && (
+              <p
+                className="mt-5 rounded-xl px-4 py-3 text-xs leading-relaxed"
+                style={{ backgroundColor: "rgba(201,162,39,0.10)", color: "var(--fr-muted)" }}
+              >
+                Opening this identity document is recorded against the candidate&apos;s record
+                with the time and your IP address. Open it only to verify identity or to
+                prepare the agreement — never download, forward or store a copy elsewhere.
+                {accessLog.length > 0 && (
+                  <>
+                    {" "}
+                    Opened {accessLog.length} time{accessLog.length === 1 ? "" : "s"} so far,
+                    most recently {formatDateTime(accessLog[accessLog.length - 1].at)}.
+                  </>
+                )}
+              </p>
+            )}
 
             {details.aadhaarFile && (
               <a
