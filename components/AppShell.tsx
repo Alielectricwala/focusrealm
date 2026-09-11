@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import {
@@ -169,10 +169,6 @@ export default function AppShell({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
   const { readNotifications } = useStaffState();
   const [drawer, setDrawer] = useState(false);
-
-  useEffect(() => {
-    setDrawer(false);
-  }, [pathname]);
 
   // The intern onboarding module is a separate internal tool — it brings its
   // own chrome on the same brand.

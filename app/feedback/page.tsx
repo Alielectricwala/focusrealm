@@ -31,12 +31,12 @@ export default function FeedbackPage() {
       <div>
         <PageHeader title="Feedback" subtitle="Sent to the standard's author." />
         <SubNav />
-        <div className="rounded-2xl border border-emerald-200 bg-white p-10 text-center">
-          <span className="mise-pop mx-auto flex size-20 items-center justify-center rounded-full bg-emerald-500">
+        <div className="rounded-xl border border-emerald-200 bg-surface p-10 text-center">
+          <span className="mise-pop mx-auto flex size-20 items-center justify-center rounded-full bg-emerald-600">
             <Check className="size-11 text-white" strokeWidth={3} aria-hidden />
           </span>
-          <p className="mt-4 text-lg font-black text-stone-900">Feedback sent</p>
-          <p className="mt-1 text-sm text-stone-500">
+          <p className="mt-4 text-lg font-semibold text-ink-900">Feedback sent</p>
+          <p className="mt-1 text-sm text-ink-500">
             It is with the author of {sop?.code ?? "the standard"}. You will see
             any change in your notifications.
           </p>
@@ -48,16 +48,17 @@ export default function FeedbackPage() {
   return (
     <div>
       <PageHeader
+        eyebrow="Enablement"
         title="Feedback"
         subtitle="Tell the author what would make this brief work on the floor."
       />
       <SubNav />
 
       <div className="mx-auto max-w-2xl space-y-5">
-        <section className="rounded-2xl border border-stone-200 bg-white p-4">
+        <section className="rounded-xl border border-line bg-surface p-4">
           <label
             htmlFor="brief"
-            className="mb-2 block text-[11px] font-bold tracking-wide text-stone-400 uppercase"
+            className="mb-2 block text-[11px] font-bold tracking-wide text-ink-400 uppercase"
           >
             Which brief
           </label>
@@ -65,7 +66,7 @@ export default function FeedbackPage() {
             id="brief"
             value={courseId}
             onChange={(event) => setCourseId(event.target.value)}
-            className="min-h-14 w-full rounded-xl border border-stone-200 bg-white px-4 text-base font-semibold text-stone-900 focus:border-stone-900 focus:outline-none"
+            className="min-h-11 w-full rounded-xl border border-line bg-surface px-4 text-base font-semibold text-ink-900 focus:border-navy-600 focus:outline-none"
           >
             {COURSES.map((c) => (
               <option key={c.id} value={c.id}>
@@ -74,14 +75,14 @@ export default function FeedbackPage() {
             ))}
           </select>
           {sop && (
-            <p className="mt-2 font-mono text-xs font-bold text-stone-400">
+            <p className="mt-2 font-mono text-xs font-bold text-ink-400">
               Routes to the author of {sop.code}
             </p>
           )}
         </section>
 
-        <section className="rounded-2xl border border-stone-200 bg-white p-4">
-          <p className="mb-3 text-[11px] font-bold tracking-wide text-stone-400 uppercase">
+        <section className="rounded-xl border border-line bg-surface p-4">
+          <p className="mb-3 text-[11px] font-bold tracking-wide text-ink-400 uppercase">
             How useful was it
           </p>
           <div className="flex gap-2">
@@ -94,8 +95,8 @@ export default function FeedbackPage() {
                 aria-pressed={rating === value}
                 className={`flex size-14 flex-1 items-center justify-center rounded-xl transition-colors ${
                   value <= rating
-                    ? "bg-amber-100 text-amber-500"
-                    : "bg-stone-100 text-stone-300"
+                    ? "bg-gold-50 text-gold-500"
+                    : "bg-canvas text-ink-400"
                 }`}
               >
                 <Star
@@ -109,8 +110,8 @@ export default function FeedbackPage() {
           </div>
         </section>
 
-        <section className="rounded-2xl border border-stone-200 bg-white p-4">
-          <p className="mb-3 text-[11px] font-bold tracking-wide text-stone-400 uppercase">
+        <section className="rounded-xl border border-line bg-surface p-4">
+          <p className="mb-3 text-[11px] font-bold tracking-wide text-ink-400 uppercase">
             What would you change
           </p>
           <ul className="space-y-2">
@@ -128,15 +129,15 @@ export default function FeedbackPage() {
                           : [...prev, suggestion],
                       )
                     }
-                    className={`flex min-h-14 w-full items-center gap-3 rounded-xl px-4 text-left text-sm font-semibold ${
+                    className={`flex min-h-11 w-full items-center gap-3 rounded-xl px-4 text-left text-sm font-semibold ${
                       active
-                        ? "bg-stone-900 text-white"
-                        : "bg-stone-50 text-stone-700 ring-1 ring-stone-200"
+                        ? "bg-navy-800 text-white"
+                        : "bg-canvas text-ink-700 ring-1 ring-line"
                     }`}
                   >
                     <span
                       className={`flex size-6 shrink-0 items-center justify-center rounded-md ${
-                        active ? "bg-white text-stone-900" : "ring-2 ring-stone-300"
+                        active ? "bg-surface text-ink-900" : "ring-2 ring-line-strong"
                       }`}
                       aria-hidden
                     >
@@ -149,7 +150,7 @@ export default function FeedbackPage() {
             })}
           </ul>
 
-          <label htmlFor="note" className="mt-4 mb-2 block text-sm font-bold text-stone-700">
+          <label htmlFor="note" className="mt-4 mb-2 block text-sm font-bold text-ink-700">
             Anything else
           </label>
           <textarea
@@ -158,7 +159,7 @@ export default function FeedbackPage() {
             value={note}
             onChange={(event) => setNote(event.target.value)}
             placeholder="Optional — what happened on the floor?"
-            className="w-full rounded-xl border border-stone-200 bg-white p-4 text-base text-stone-900 placeholder:text-stone-400 focus:border-stone-900 focus:outline-none"
+            className="w-full rounded-xl border border-line bg-surface p-4 text-base text-ink-900 placeholder:text-ink-400 focus:border-navy-600 focus:outline-none"
           />
         </section>
 
@@ -166,7 +167,7 @@ export default function FeedbackPage() {
           type="button"
           onClick={sendFeedback}
           disabled={rating === 0}
-          className="flex min-h-14 w-full items-center justify-center gap-2 rounded-xl bg-stone-900 text-base font-bold text-white disabled:bg-stone-200 disabled:text-stone-400"
+          className="flex min-h-11 w-full items-center justify-center gap-2 rounded-xl bg-navy-800 text-base font-bold text-white disabled:bg-line disabled:text-ink-400"
         >
           <Send className="size-5" aria-hidden />
           Send to author

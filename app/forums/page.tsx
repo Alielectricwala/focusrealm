@@ -9,6 +9,7 @@ export default function ForumsPage() {
   return (
     <div>
       <PageHeader
+        eyebrow="Enablement"
         title="Forums"
         subtitle="Questions about a standard, answered by your supervisor."
       />
@@ -20,33 +21,33 @@ export default function ForumsPage() {
 
           return (
             <li key={thread.id}>
-              <article className="overflow-hidden rounded-2xl border border-stone-200 bg-white">
-                <header className="border-b border-stone-100 p-4">
+              <article className="overflow-hidden rounded-xl border border-line bg-surface">
+                <header className="border-b border-line p-4">
                   {sop && (
                     <Link
                       href={`/sop/${sop.id}`}
-                      className="-mx-2 inline-flex min-h-14 items-center gap-1 rounded-lg px-2 font-mono text-xs font-bold text-stone-500 hover:bg-stone-100 hover:text-stone-900"
+                      className="-mx-2 inline-flex min-h-11 items-center gap-1 rounded-lg px-2 font-mono text-xs font-bold text-ink-500 hover:bg-canvas hover:text-ink-900"
                     >
                       {sop.code} · {sop.title}
                       <ChevronRight className="size-3.5" aria-hidden />
                     </Link>
                   )}
-                  <h2 className="mt-1.5 flex items-start gap-2 text-base leading-snug font-bold text-balance text-stone-900">
+                  <h2 className="mt-1.5 flex items-start gap-2 text-base leading-snug font-bold text-balance text-ink-900">
                     <MessageSquare
-                      className="mt-0.5 size-5 shrink-0 text-stone-400"
+                      className="mt-0.5 size-5 shrink-0 text-ink-400"
                       aria-hidden
                     />
                     {thread.question}
                   </h2>
                 </header>
 
-                <ul className="divide-y divide-stone-100">
+                <ul className="divide-y divide-line">
                   {thread.posts.map((post) => (
                     <li key={post.id} className="flex gap-3 p-4">
                       <span
-                        className={`flex size-10 shrink-0 items-center justify-center rounded-full text-xs font-black text-white ${
+                        className={`flex size-10 shrink-0 items-center justify-center rounded-full text-xs font-semibold text-white ${
                           post.role === "Supervisor"
-                            ? "bg-stone-800"
+                            ? "bg-navy-800"
                             : "bg-emerald-600"
                         }`}
                         aria-hidden
@@ -55,23 +56,23 @@ export default function ForumsPage() {
                       </span>
                       <div className="min-w-0 flex-1">
                         <p className="flex flex-wrap items-baseline gap-x-2 gap-y-0.5">
-                          <span className="text-sm font-bold text-stone-900">
+                          <span className="text-sm font-bold text-ink-900">
                             {post.author}
                           </span>
                           <span
                             className={`rounded-md px-1.5 py-0.5 text-[10px] font-bold ${
                               post.role === "Supervisor"
-                                ? "bg-stone-900 text-white"
-                                : "bg-stone-100 text-stone-500"
+                                ? "bg-navy-800 text-white"
+                                : "bg-canvas text-ink-500"
                             }`}
                           >
                             {post.role}
                           </span>
-                          <span className="text-xs font-medium text-stone-400">
+                          <span className="text-xs font-medium text-ink-400">
                             {post.at}
                           </span>
                         </p>
-                        <p className="mt-1.5 text-sm leading-relaxed text-pretty text-stone-600">
+                        <p className="mt-1.5 text-sm leading-relaxed text-pretty text-ink-600">
                           {post.body}
                         </p>
                       </div>

@@ -22,17 +22,17 @@ const KIND: Record<
 > = {
   assignment: {
     label: "Assignment",
-    className: "bg-sky-100 text-sky-800",
+    className: "bg-sky-50 text-sky-700",
     Icon: GraduationCap,
   },
   feedback: {
     label: "Feedback",
-    className: "bg-violet-100 text-violet-800",
+    className: "bg-indigo-50 text-indigo-700",
     Icon: MessageSquareQuote,
   },
   reminder: {
     label: "Reminder",
-    className: "bg-amber-100 text-amber-900",
+    className: "bg-gold-50 text-gold-600",
     Icon: MessageCircle,
   },
 };
@@ -52,6 +52,7 @@ export default function NotificationsPage() {
   return (
     <div>
       <PageHeader
+        eyebrow="Enablement"
         title="Notifications"
         subtitle="Delivered in platform, by email and over WhatsApp."
         action={
@@ -61,7 +62,7 @@ export default function NotificationsPage() {
               onClick={() =>
                 markAllNotificationsRead(NOTIFICATIONS.map((n) => n.id))
               }
-              className="flex min-h-14 items-center rounded-xl bg-white px-4 text-sm font-bold text-stone-700 ring-1 ring-stone-200 hover:bg-stone-50"
+              className="flex min-h-11 items-center rounded-xl bg-surface px-4 text-sm font-bold text-ink-700 ring-1 ring-line hover:bg-canvas"
             >
               Mark all read
             </button>
@@ -80,10 +81,10 @@ export default function NotificationsPage() {
               <Link
                 href={notification.href ?? "/notifications"}
                 onClick={() => markNotificationRead(notification.id)}
-                className={`flex gap-3 rounded-2xl border p-4 transition-colors ${
+                className={`flex gap-3 rounded-xl border p-4 transition-colors ${
                   read
-                    ? "border-stone-200 bg-white/60"
-                    : "border-stone-300 bg-white"
+                    ? "border-line bg-surface/60"
+                    : "border-line-strong bg-surface"
                 }`}
               >
                 <span
@@ -101,21 +102,21 @@ export default function NotificationsPage() {
                       {kind.label}
                     </span>
                     {!read && (
-                      <span className="size-2 rounded-full bg-rose-500" aria-label="Unread" />
+                      <span className="size-2 rounded-full bg-rose-600" aria-label="Unread" />
                     )}
-                    <span className="text-xs font-medium text-stone-400">
+                    <span className="text-xs font-medium text-ink-400">
                       {notification.at}
                     </span>
                   </div>
 
                   <p
                     className={`mt-1 text-sm leading-snug text-balance ${
-                      read ? "font-semibold text-stone-600" : "font-bold text-stone-900"
+                      read ? "font-semibold text-ink-600" : "font-bold text-ink-900"
                     }`}
                   >
                     {notification.title}
                   </p>
-                  <p className="mt-1 text-sm leading-snug text-pretty text-stone-500">
+                  <p className="mt-1 text-sm leading-snug text-pretty text-ink-500">
                     {notification.body}
                   </p>
 
@@ -125,7 +126,7 @@ export default function NotificationsPage() {
                       return (
                         <li
                           key={channel}
-                          className="inline-flex items-center gap-1 rounded-md bg-stone-100 px-2 py-0.5 text-[11px] font-bold text-stone-500"
+                          className="inline-flex items-center gap-1 rounded-md bg-canvas px-2 py-0.5 text-[11px] font-bold text-ink-500"
                         >
                           <meta.Icon className="size-3.5" aria-hidden />
                           {meta.label}
@@ -136,7 +137,7 @@ export default function NotificationsPage() {
                 </div>
 
                 <ChevronRight
-                  className="size-5 shrink-0 self-center text-stone-300"
+                  className="size-5 shrink-0 self-center text-ink-400"
                   aria-hidden
                 />
               </Link>
