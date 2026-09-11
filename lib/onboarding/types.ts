@@ -15,6 +15,13 @@ export type InternTrack = string;
 
 export interface TrackDefinition {
   id: InternTrack;
+  /**
+   * True only where a reviewed agreement document exists in the repository for
+   * this role. Everything else is issued from the standard template with this
+   * role's title and duties written in — which the founders have to approve,
+   * or replace with a document of their own.
+   */
+  agreementOnFile?: boolean;
   /** "Marketing" — used in headings and the agreement subtitle. */
   label: string;
   /** "Marketing Intern" — the role title written into the agreement. */
@@ -22,6 +29,22 @@ export interface TrackDefinition {
   /** The duties clause of the agreement, phrased to follow "assisting with". */
   duties: string;
 }
+
+/**
+ * Only the Founder's Office agreement exists as a reviewed document. For any
+ * other role the founders choose, per candidate, between issuing the standard
+ * template with that role's title, duties and term written in, or uploading an
+ * agreement of their own — the flow will not let a candidate reach a signature
+ * until one of those is settled.
+ */
+export type AgreementPlan =
+  | { kind: "standard" }
+  | { kind: "bespoke"; document?: StoredFile; uploadedAt?: string };
+
+/** Used when an older record predates the term field, and as the form default. */
+export const DEFAULT_TERM_MONTHS = 3;
+export const MIN_TERM_MONTHS = 1;
+export const MAX_TERM_MONTHS = 24;
 
 export type Stage =
   | "details"
@@ -118,6 +141,10 @@ export interface Candidate {
   track: InternTrack;
   /** Set when the role is not one of the built-in tracks. */
   customTrack?: TrackDefinition;
+  /** Length of the engagement in months. Written into the agreement. */
+  termMonths: number;
+  /** Which agreement this candidate signs, and whether it is ready to sign. */
+  agreement: AgreementPlan;
   /** What we knew at invite time, before the candidate submits anything. */
   invitedName: string;
   invitedEmail: string;
@@ -142,6 +169,11 @@ export interface Candidate {
 /** Candidate-safe view — no Aadhaar number, no sealed password. */
 export interface CandidateView {
   track: InternTrack;
+  termMonths: number;
+  endDate: string;
+  /** "standard" or "bespoke" — the candidate sees which document they sign. */
+  agreementKind: AgreementPlan["kind"];
+  agreementDocumentName: string | null;
   /** Resolved role — the candidate never needs to know about track ids. */
   role: TrackDefinition;
   invitedName: string;
@@ -166,6 +198,7 @@ export const BUILT_IN_TRACKS: Record<string, TrackDefinition> = {
     id: "founders-office",
     label: "Founder's Office",
     roleTitle: "Founder's Office Intern",
+    agreementOnFile: true,
     duties:
       "strategic and research support, cross-functional project work, and operational assistance to the founding team",
   },

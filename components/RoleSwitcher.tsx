@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { Check, ChevronsUpDown, Lock } from "lucide-react";
+import BrandMark from "./BrandMark";
 import type { RoleKey } from "@/lib/types";
 
 const ROLES: { key: RoleKey; label: string; detail: string }[] = [
@@ -27,12 +28,7 @@ export default function RoleSwitcher() {
         aria-haspopup="menu"
         className="flex min-h-12 w-full items-center gap-2.5 rounded-lg px-2 text-left transition-colors hover:bg-navy-800"
       >
-        <span
-          className="flex size-9 shrink-0 items-center justify-center rounded-lg bg-gold-500 text-xs font-bold tracking-tight text-navy-900"
-          aria-hidden
-        >
-          FR
-        </span>
+        <BrandMark size={36} />
         <span className="min-w-0 flex-1">
           <span className="block text-[11px] leading-tight font-semibold tracking-[0.18em] text-white uppercase">
             Focus Realm

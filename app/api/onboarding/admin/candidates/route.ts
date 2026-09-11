@@ -1,9 +1,16 @@
 import { error, isAdmin, json } from "@/lib/onboarding/api.server";
 import { createCandidate, listCandidates } from "@/lib/onboarding/store.server";
-import { currentStage } from "@/lib/onboarding/stage";
+import { agreementReady, currentStage, endDateOf } from "@/lib/onboarding/stage";
 import { maskAadhaar } from "@/lib/onboarding/security.server";
-import { BUILT_IN_TRACKS, trackIdFromLabel, trackOf } from "@/lib/onboarding/types";
-import type { TrackDefinition } from "@/lib/onboarding/types";
+import {
+  BUILT_IN_TRACKS,
+  DEFAULT_TERM_MONTHS,
+  MAX_TERM_MONTHS,
+  MIN_TERM_MONTHS,
+  trackIdFromLabel,
+  trackOf,
+} from "@/lib/onboarding/types";
+import type { AgreementPlan, TrackDefinition } from "@/lib/onboarding/types";
 
 /** Summary rows for the console. Full Aadhaar numbers never appear in the list. */
 export async function GET() {
@@ -20,6 +27,10 @@ export async function GET() {
       track: c.track,
       role: trackOf(c),
       startDate: c.startDate,
+      endDate: endDateOf(c),
+      termMonths: c.termMonths ?? DEFAULT_TERM_MONTHS,
+      agreementKind: c.agreement?.kind ?? "standard",
+      agreementReady: agreementReady(c),
       createdAt: c.createdAt,
       stage: currentStage(c),
       fullName: c.details?.fullName ?? null,
@@ -43,6 +54,9 @@ export async function POST(request: Request) {
     startDate?: string;
     /** Sent instead of a built-in track id when the founders define a role. */
     customRole?: { label?: string; roleTitle?: string; duties?: string };
+    termMonths?: number;
+    /** "standard" issues the template; "bespoke" waits for an uploaded document. */
+    agreementKind?: AgreementPlan["kind"];
   } | null;
 
   const invitedName = body?.invitedName?.trim();
@@ -85,12 +99,30 @@ export async function POST(request: Request) {
     return error("Unknown track.");
   }
 
+  const termMonths = body?.termMonths ?? DEFAULT_TERM_MONTHS;
+  if (
+    !Number.isInteger(termMonths) ||
+    termMonths < MIN_TERM_MONTHS ||
+    termMonths > MAX_TERM_MONTHS
+  ) {
+    return error(
+      `The term has to be a whole number of months between ${MIN_TERM_MONTHS} and ${MAX_TERM_MONTHS}.`,
+    );
+  }
+
+  const agreementKind = body?.agreementKind ?? "standard";
+  if (agreementKind !== "standard" && agreementKind !== "bespoke") {
+    return error("Unknown agreement choice.");
+  }
+
   const candidate = await createCandidate({
     invitedName,
     invitedEmail,
     track: customTrack ? customTrack.id : track,
     customTrack,
     startDate: new Date(startDate).toISOString(),
+    termMonths,
+    agreement: { kind: agreementKind },
   });
 
   return json({ id: candidate.id, token: candidate.token }, 201);

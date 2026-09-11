@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { Clock, FileSignature, Printer } from "lucide-react";
+import { Clock, ExternalLink, FileSignature, Printer } from "lucide-react";
 import type { Contract } from "@/lib/onboarding/contract";
 import type { CandidateView, Signature } from "@/lib/onboarding/types";
 import ContractDocument from "./ContractDocument";
@@ -21,6 +21,10 @@ export default function ContractStage({
   locked: boolean;
 }) {
   const [contract, setContract] = useState<Contract | null>(null);
+  const [document, setDocument] = useState<{ originalName: string; bytes: number } | null>(
+    null,
+  );
+  const [notReady, setNotReady] = useState(false);
   const [signature, setSignature] = useState<Signature | null>(null);
   const [typedName, setTypedName] = useState("");
   const [affirmed, setAffirmed] = useState(false);
@@ -33,12 +37,20 @@ export default function ContractStage({
 
     let cancelled = false;
     fetch(`/api/onboarding/session/${token}/contract`)
-      .then((r) => (r.ok ? r.json() : null))
-      .then((data) => {
-        if (cancelled || !data) return;
-        setContract(data.contract as Contract);
+      .then(async (r) => ({ ok: r.ok, status: r.status, data: await r.json() }))
+      .then(({ ok, status, data }) => {
+        if (cancelled) return;
+        if (!ok) {
+          // 409 means the founders are still preparing this role's agreement.
+          setNotReady(status === 409);
+          return;
+        }
+        setNotReady(false);
+        setContract((data.contract as Contract) ?? null);
+        setDocument(data.kind === "bespoke" ? data.document : null);
         setSignature(data.signature as Signature | null);
-      });
+      })
+      .catch(() => {});
 
     return () => {
       cancelled = true;
@@ -128,9 +140,42 @@ export default function ContractStage({
         )}
       </Card>
 
+      {notReady && (
+        <Card>
+          <Notice tone="warn">
+            The agreement for your role is being prepared. Your point of contact will let
+            you know the moment it is ready to sign — nothing else is needed from you until
+            then.
+          </Notice>
+        </Card>
+      )}
+
+      {document && (
+        <Card>
+          <SectionTitle
+            title="Your agreement"
+            lead="Your role has its own agreement rather than the standard one. Open it and read it in full before signing."
+          />
+          <a
+            href={`/api/onboarding/session/${token}/agreement`}
+            target="_blank"
+            rel="noreferrer"
+            className="inline-flex min-h-12 items-center gap-2 rounded-xl px-4 text-sm font-bold"
+            style={{
+              backgroundColor: "var(--fr-navy-soft)",
+              border: "1px solid var(--fr-line)",
+              color: "var(--fr-paper)",
+            }}
+          >
+            Open {document.originalName}
+            <ExternalLink className="size-4" aria-hidden />
+          </a>
+        </Card>
+      )}
+
       {contract && <ContractDocument contract={contract} signature={signature} />}
 
-      {contract && !isSigned && (
+      {(contract || document) && !isSigned && (
         <Card>
           <SectionTitle
             title="Sign the agreement"
@@ -138,7 +183,11 @@ export default function ContractStage({
           />
 
           <div className="space-y-5">
-            <Field label="Type your full name" hint={`Must match "${contract.fields.fullName}".`}>
+            <Field label="Type your full name" hint={
+                contract
+                  ? `Must match "${contract.fields.fullName}".`
+                  : "Must match the full name you submitted."
+              }>
               <input
                 value={typedName}
                 onChange={(e) => setTypedName(e.target.value)}

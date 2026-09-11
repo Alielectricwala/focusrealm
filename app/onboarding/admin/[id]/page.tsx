@@ -3,7 +3,7 @@
 import { useCallback, useEffect, useState } from "react";
 import { useParams } from "next/navigation";
 import Link from "next/link";
-import { ArrowLeft, Check, ExternalLink, Mail, X } from "lucide-react";
+import { ArrowLeft, Check, ExternalLink, FileWarning, Mail, Upload, X } from "lucide-react";
 import ContractDocument from "@/components/onboarding/ContractDocument";
 import {
   Button,
@@ -18,7 +18,13 @@ import {
   inputStyle,
 } from "@/components/onboarding/ui";
 import type { Contract } from "@/lib/onboarding/contract";
-import { STAGE_LABEL, trackOf, type Candidate, type Stage } from "@/lib/onboarding/types";
+import {
+  DEFAULT_TERM_MONTHS,
+  STAGE_LABEL,
+  trackOf,
+  type Candidate,
+  type Stage,
+} from "@/lib/onboarding/types";
 
 interface AdminCandidate extends Omit<Candidate, "mailbox"> {
   stage: Stage;
@@ -80,6 +86,14 @@ export default function AdminCandidatePage() {
 
   const { details } = candidate;
   const consent = details?.consent ?? null;
+  const termMonths = candidate.termMonths || DEFAULT_TERM_MONTHS;
+  const endDate = (() => {
+    const end = new Date(candidate.startDate);
+    end.setUTCMonth(end.getUTCMonth() + termMonths);
+    return end.toISOString();
+  })();
+  const plan = candidate.agreement ?? { kind: "standard" as const };
+  const bespokeDocument = plan.kind === "bespoke" ? plan.document : undefined;
   const accessLog = candidate.aadhaarAccess ?? [];
 
   return (
@@ -101,7 +115,8 @@ export default function AdminCandidatePage() {
           {details?.fullName ?? candidate.invitedName}
         </h1>
         <p className="mt-1.5 text-sm" style={{ color: "var(--fr-muted)" }}>
-          {trackOf(candidate).label} · starts {formatDate(candidate.startDate)} · currently at{" "}
+          {trackOf(candidate).label} · {termMonths}-month term · {formatDate(candidate.startDate)}{" "}
+          → {formatDate(endDate)} · currently at{" "}
           <span style={{ color: "var(--fr-gold-soft)" }}>{STAGE_LABEL[candidate.stage]}</span>
         </p>
       </header>
@@ -121,6 +136,63 @@ export default function AdminCandidatePage() {
           >
             /onboarding/{candidate.token}
           </p>
+        </Card>
+
+        <Card>
+          <SectionTitle
+            title="Agreement for this role"
+            lead={
+              plan.kind === "standard"
+                ? `The standard agreement, issued with this candidate's role title, duties and ${termMonths}-month term written in.`
+                : "A document you supply for this role. The candidate cannot sign until it is uploaded."
+            }
+          />
+
+          {plan.kind === "standard" ? (
+            <Notice tone="good">
+              Ready to sign. Every clause matches the Founder&apos;s Office agreement —
+              only the role title, the duties and the term differ.
+            </Notice>
+          ) : bespokeDocument ? (
+            <div className="space-y-4">
+              <Notice tone="good">
+                Uploaded{plan.uploadedAt ? ` ${formatDateTime(plan.uploadedAt)}` : ""} —
+                the candidate can sign against it.
+              </Notice>
+              <a
+                href={`/api/onboarding/admin/candidates/${id}/agreement`}
+                target="_blank"
+                rel="noreferrer"
+                className="inline-flex min-h-12 items-center gap-2 rounded-xl px-4 text-sm font-bold"
+                style={{
+                  backgroundColor: "var(--fr-navy-soft)",
+                  border: "1px solid var(--fr-line)",
+                  color: "var(--fr-paper)",
+                }}
+              >
+                Open {bespokeDocument.originalName}
+                <ExternalLink className="size-4" aria-hidden />
+              </a>
+              {!candidate.signature && (
+                <AgreementUpload id={id} onDone={load} replacing />
+              )}
+            </div>
+          ) : (
+            <div className="space-y-4">
+              <Notice tone="warn">
+                <span className="inline-flex items-center gap-2 font-bold">
+                  <FileWarning className="size-4" aria-hidden />
+                  Action needed
+                </span>
+                <span className="mt-1 block">
+                  This candidate is set to sign a role-specific agreement, and none has
+                  been uploaded. Upload the agreement — or the job description the
+                  agreement is drawn from — before they finish the assessments.
+                </span>
+              </Notice>
+              <AgreementUpload id={id} onDone={load} />
+            </div>
+          )}
         </Card>
 
         {details ? (
@@ -410,5 +482,67 @@ function Detail({ label, value }: { label: string; value: string }) {
       </dt>
       <dd className="mt-1 text-sm leading-snug break-words">{value}</dd>
     </div>
+  );
+}
+
+/** Uploads the agreement or job description for a role the template misses. */
+function AgreementUpload({
+  id,
+  onDone,
+  replacing,
+}: {
+  id: string;
+  onDone: () => void;
+  replacing?: boolean;
+}) {
+  const [busy, setBusy] = useState(false);
+  const [message, setMessage] = useState<string | null>(null);
+
+  async function submit(event: React.FormEvent<HTMLFormElement>) {
+    event.preventDefault();
+    setBusy(true);
+    setMessage(null);
+
+    const response = await fetch(`/api/onboarding/admin/candidates/${id}/agreement`, {
+      method: "POST",
+      body: new FormData(event.currentTarget),
+    });
+    const data = await response.json();
+    setBusy(false);
+
+    if (!response.ok) {
+      setMessage(data.error ?? "Could not upload that.");
+      return;
+    }
+    onDone();
+  }
+
+  return (
+    <form onSubmit={submit} className="space-y-3">
+      <Field
+        label={replacing ? "Replace the document" : "Agreement or job description"}
+        hint="PDF or Word, up to 12 MB. Stored privately, alongside identity documents."
+      >
+        <div
+          className="flex items-center gap-3 rounded-xl border border-dashed px-4 py-4"
+          style={{ borderColor: "var(--fr-line)", backgroundColor: "var(--fr-navy-deep)" }}
+        >
+          <Upload className="size-5 shrink-0" style={{ color: "var(--fr-gold)" }} aria-hidden />
+          <input
+            name="document"
+            type="file"
+            required
+            accept="application/pdf,.doc,.docx"
+            className="min-w-0 flex-1 text-sm file:mr-3 file:rounded-lg file:border-0 file:bg-[var(--fr-navy-soft)] file:px-3 file:py-2 file:text-sm file:font-bold file:text-[var(--fr-paper)]"
+          />
+        </div>
+      </Field>
+
+      {message && <Notice tone="bad">{message}</Notice>}
+
+      <Button type="submit" disabled={busy}>
+        {busy ? "Uploading…" : replacing ? "Replace document" : "Upload agreement"}
+      </Button>
+    </form>
   );
 }
