@@ -11,11 +11,11 @@ interface Props {
 /** Circular progress used for the live task and the five-star score. */
 export default function ProgressRing({
   percent,
-  size = 96,
-  stroke = 9,
+  size = 84,
+  stroke = 6,
   label,
   sublabel,
-  className = "text-emerald-500",
+  className = "text-gold-500",
 }: Props) {
   const clamped = Math.max(0, Math.min(100, percent));
   const radius = (size - stroke) / 2;
@@ -36,7 +36,7 @@ export default function ProgressRing({
           r={radius}
           fill="none"
           strokeWidth={stroke}
-          className="stroke-stone-200"
+          className="stroke-line"
         />
         <circle
           cx={size / 2}
@@ -51,12 +51,12 @@ export default function ProgressRing({
         />
       </svg>
       <span className="absolute inset-0 flex flex-col items-center justify-center">
-        <span className="font-mono text-xl leading-none font-black text-stone-900">
+        <span className="text-lg leading-none font-semibold tracking-tight text-ink-900 tnum">
           {Math.round(clamped)}
-          <span className="text-xs">%</span>
+          <span className="text-xs font-medium text-ink-400">%</span>
         </span>
         {sublabel && (
-          <span className="mt-0.5 text-[10px] leading-none font-bold text-stone-400 uppercase">
+          <span className="mt-1 text-[9px] leading-none font-semibold tracking-[0.14em] text-ink-400 uppercase">
             {sublabel}
           </span>
         )}
