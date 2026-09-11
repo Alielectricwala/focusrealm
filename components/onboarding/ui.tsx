@@ -1,19 +1,14 @@
 "use client";
 
 import type { ReactNode } from "react";
+import BrandMark from "../BrandMark";
 
 /** Small brand primitives shared across the onboarding module. */
 
 export function Wordmark({ subtitle }: { subtitle?: string }) {
   return (
     <div className="flex items-center gap-3">
-      <span
-        className="flex size-10 shrink-0 items-center justify-center rounded-lg text-sm font-black tracking-tight"
-        style={{ backgroundColor: "var(--fr-gold)", color: "var(--fr-navy-deep)" }}
-        aria-hidden
-      >
-        FR
-      </span>
+      <BrandMark size={40} />
       <span className="min-w-0">
         <span className="block text-sm leading-tight font-bold tracking-[0.18em] uppercase">
           Focus Realm

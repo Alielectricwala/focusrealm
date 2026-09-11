@@ -81,6 +81,14 @@ export default function OnboardingLanding() {
         </div>
       </Card>
 
+      <p className="mb-4 text-center text-xs leading-relaxed" style={{ color: "var(--fr-muted)" }}>
+        Before you submit anything, read the{" "}
+        <Link href="/onboarding/privacy" className="font-bold underline" style={{ color: "var(--fr-gold-soft)" }}>
+          onboarding privacy notice
+        </Link>{" "}
+        — what we collect, why, how long we keep it, and how to take it back.
+      </p>
+
       <p className="text-center text-xs" style={{ color: "var(--fr-muted)" }}>
         Founders —{" "}
         <Link href="/onboarding/admin" className="font-bold underline">

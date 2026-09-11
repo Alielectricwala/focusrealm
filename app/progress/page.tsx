@@ -16,39 +16,40 @@ export default function ProgressPage() {
   return (
     <div className="space-y-6">
       <PageHeader
+        eyebrow="Performance"
         title="Service record"
         subtitle="What you have verified, what you are running, and what to sharpen."
       />
 
       {/* Headline */}
-      <section className="flex flex-wrap items-center gap-5 rounded-2xl border border-stone-200 bg-white p-5">
+      <section className="flex flex-wrap items-center gap-5 rounded-xl border border-line bg-surface p-5">
         <ProgressRing
           percent={SERVICE_RECORD.fiveStarScore}
           size={112}
           stroke={10}
           sublabel="ready"
-          className="text-amber-500"
+          className="text-gold-500"
         />
         <div className="min-w-0 flex-1">
-          <h2 className="text-xl font-black text-stone-900">Five-star ready</h2>
-          <p className="mt-1 text-sm leading-snug text-stone-500">
+          <h2 className="text-xl font-semibold text-ink-900">Five-star ready</h2>
+          <p className="mt-1 text-sm leading-snug text-ink-500">
             Across verified standards, on-time releases and supervisor spot-checks
             this quarter.
           </p>
           <dl className="mt-4 flex flex-wrap gap-6">
             <div>
-              <dt className="text-[11px] font-bold text-stone-400 uppercase">
+              <dt className="text-[11px] font-bold text-ink-400 uppercase">
                 Verified
               </dt>
-              <dd className="font-mono text-2xl font-black text-emerald-600">
+              <dd className="font-mono text-2xl font-semibold text-emerald-600">
                 {SERVICE_RECORD.verifiedStandards}
               </dd>
             </div>
             <div>
-              <dt className="text-[11px] font-bold text-stone-400 uppercase">
+              <dt className="text-[11px] font-bold text-ink-400 uppercase">
                 Active
               </dt>
-              <dd className="font-mono text-2xl font-black text-amber-600">
+              <dd className="font-mono text-2xl font-semibold text-amber-600">
                 {SERVICE_RECORD.activeStandards}
               </dd>
             </div>
@@ -60,27 +61,27 @@ export default function ProgressPage() {
       {sop && (
         <section
           aria-labelledby="breakdown"
-          className="overflow-hidden rounded-2xl border border-stone-200 bg-white"
+          className="overflow-hidden rounded-xl border border-line bg-surface"
         >
-          <header className="flex flex-wrap items-center justify-between gap-2 border-b border-stone-100 p-4">
+          <header className="flex flex-wrap items-center justify-between gap-2 border-b border-line p-4">
             <div>
-              <h2 id="breakdown" className="text-lg font-black text-stone-900">
+              <h2 id="breakdown" className="text-lg font-semibold text-ink-900">
                 Current task
               </h2>
-              <p className="font-mono text-xs font-bold text-stone-400">
+              <p className="font-mono text-xs font-bold text-ink-400">
                 Room {ACTIVE_TASK.room} · {sop.code}
               </p>
             </div>
             <Link
               href={`/sop/${sop.id}/practice`}
-              className="flex min-h-14 items-center gap-2 rounded-xl bg-stone-100 px-4 text-sm font-bold text-stone-700 hover:bg-stone-200"
+              className="flex min-h-11 items-center gap-2 rounded-xl bg-canvas px-4 text-sm font-bold text-ink-700 hover:bg-canvas"
             >
               Open runner
               <ChevronRight className="size-5" aria-hidden />
             </Link>
           </header>
 
-          <div className="grid gap-px bg-stone-100 sm:grid-cols-2 lg:grid-cols-4">
+          <div className="grid gap-px bg-canvas sm:grid-cols-2 lg:grid-cols-4">
             {PHASE_ORDER.map((phaseKey, index) => {
               const phase = sop.phases.find((p) => p.key === phaseKey);
               if (!phase) return null;
@@ -89,24 +90,24 @@ export default function ProgressPage() {
               const complete = done === phase.steps.length;
 
               return (
-                <div key={phaseKey} className="bg-white p-4">
+                <div key={phaseKey} className="bg-surface p-4">
                   <div className="flex items-center gap-2">
                     <span
-                      className={`flex size-7 shrink-0 items-center justify-center rounded-lg font-mono text-xs font-black ${
+                      className={`flex size-7 shrink-0 items-center justify-center rounded-lg font-mono text-xs font-semibold ${
                         complete
-                          ? "bg-emerald-500 text-white"
+                          ? "bg-emerald-600 text-white"
                           : done > 0
-                            ? "bg-amber-500 text-white"
-                            : "bg-stone-200 text-stone-500"
+                            ? "bg-gold-500 text-white"
+                            : "bg-line text-ink-500"
                       }`}
                       aria-hidden
                     >
                       {complete ? <Check className="size-4" strokeWidth={3} /> : index + 1}
                     </span>
-                    <h3 className="text-sm font-black text-stone-900">
+                    <h3 className="text-sm font-semibold text-ink-900">
                       {PHASE_LABEL[phaseKey]}
                     </h3>
-                    <span className="ml-auto font-mono text-xs font-bold text-stone-400">
+                    <span className="ml-auto font-mono text-xs font-bold text-ink-400">
                       {done}/{phase.steps.length}
                     </span>
                   </div>
@@ -119,8 +120,8 @@ export default function ProgressPage() {
                           <span
                             className={`mt-0.5 flex size-4 shrink-0 items-center justify-center rounded ${
                               ticked
-                                ? "bg-emerald-500 text-white"
-                                : "ring-1.5 ring-stone-300"
+                                ? "bg-emerald-600 text-white"
+                                : "ring-1.5 ring-line-strong"
                             }`}
                             aria-hidden
                           >
@@ -128,7 +129,7 @@ export default function ProgressPage() {
                           </span>
                           <span
                             className={`text-xs leading-snug text-pretty ${
-                              ticked ? "text-stone-400 line-through" : "text-stone-600"
+                              ticked ? "text-ink-400 line-through" : "text-ink-600"
                             }`}
                           >
                             {step.text}
@@ -146,8 +147,8 @@ export default function ProgressPage() {
 
       {/* Supervisor comments */}
       <div className="grid gap-4 lg:grid-cols-2">
-        <section className="rounded-2xl border border-stone-200 bg-white p-4">
-          <h2 className="mb-3 flex items-center gap-2 text-sm font-black text-stone-900">
+        <section className="rounded-xl border border-line bg-surface p-4">
+          <h2 className="mb-3 flex items-center gap-2 text-sm font-semibold text-ink-900">
             <ThumbsUp className="size-4 text-emerald-600" aria-hidden />
             Strengths
           </h2>
@@ -155,10 +156,10 @@ export default function ProgressPage() {
             {SERVICE_RECORD.strengths.map((item) => (
               <li key={item} className="flex items-start gap-2.5">
                 <span
-                  className="mt-1 size-2 shrink-0 rounded-full bg-emerald-500"
+                  className="mt-1 size-2 shrink-0 rounded-full bg-emerald-600"
                   aria-hidden
                 />
-                <span className="text-sm leading-snug text-pretty text-stone-600">
+                <span className="text-sm leading-snug text-pretty text-ink-600">
                   {item}
                 </span>
               </li>
@@ -166,8 +167,8 @@ export default function ProgressPage() {
           </ul>
         </section>
 
-        <section className="rounded-2xl border border-stone-200 bg-white p-4">
-          <h2 className="mb-3 flex items-center gap-2 text-sm font-black text-stone-900">
+        <section className="rounded-xl border border-line bg-surface p-4">
+          <h2 className="mb-3 flex items-center gap-2 text-sm font-semibold text-ink-900">
             <TrendingUp className="size-4 text-amber-600" aria-hidden />
             Areas to improve
           </h2>
@@ -175,16 +176,16 @@ export default function ProgressPage() {
             {SERVICE_RECORD.improvements.map((item) => (
               <li key={item} className="flex items-start gap-2.5">
                 <span
-                  className="mt-1 size-2 shrink-0 rounded-full bg-amber-500"
+                  className="mt-1 size-2 shrink-0 rounded-full bg-gold-500"
                   aria-hidden
                 />
-                <span className="text-sm leading-snug text-pretty text-stone-600">
+                <span className="text-sm leading-snug text-pretty text-ink-600">
                   {item}
                 </span>
               </li>
             ))}
           </ul>
-          <p className="mt-4 border-t border-stone-100 pt-3 text-xs font-medium text-stone-400">
+          <p className="mt-4 border-t border-line pt-3 text-xs font-medium text-ink-400">
             From {SUPERVISOR.name}, {SUPERVISOR.title}
           </p>
         </section>
@@ -192,14 +193,14 @@ export default function ProgressPage() {
 
       {/* Credentials */}
       <section aria-labelledby="credentials">
-        <h2 id="credentials" className="mb-3 text-lg font-black text-stone-900">
+        <h2 id="credentials" className="mb-3 text-lg font-semibold text-ink-900">
           Verified credentials
         </h2>
         <ul className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-3">
           {SERVICE_RECORD.credentials.map((credential) => (
             <li
               key={credential.id}
-              className="flex items-start gap-3 rounded-2xl border border-stone-200 bg-white p-4"
+              className="flex items-start gap-3 rounded-xl border border-line bg-surface p-4"
             >
               <span
                 className="flex size-11 shrink-0 items-center justify-center rounded-xl bg-emerald-50 text-emerald-600"
@@ -208,13 +209,13 @@ export default function ProgressPage() {
                 <Award className="size-6" />
               </span>
               <div className="min-w-0 flex-1">
-                <p className="font-mono text-xs font-black text-stone-400">
+                <p className="font-mono text-xs font-semibold text-ink-400">
                   {credential.code}
                 </p>
-                <p className="text-sm leading-snug font-bold text-balance text-stone-900">
+                <p className="text-sm leading-snug font-bold text-balance text-ink-900">
                   {credential.title}
                 </p>
-                <p className="mt-1 text-xs font-medium text-stone-500">
+                <p className="mt-1 text-xs font-medium text-ink-500">
                   Verified {credential.verifiedAt}
                 </p>
               </div>

@@ -1,10 +1,11 @@
 import type { Metadata, Viewport } from "next";
-import { Geist, Geist_Mono } from "next/font/google";
+import { Geist_Mono, Inter } from "next/font/google";
 import AppShell from "@/components/AppShell";
 import "./globals.css";
 
-const geistSans = Geist({
-  variable: "--font-geist-sans",
+/** Inter and a mono for figures — the Focus Realm brand typeface pairing. */
+const inter = Inter({
+  variable: "--font-inter",
   subsets: ["latin"],
 });
 
@@ -14,13 +15,16 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Mise · Staff",
+  title: {
+    default: "Focus Realm · Service Execution Platform",
+    template: "%s · Focus Realm",
+  },
   description:
-    "Your shift, the standards behind it, and the record it builds — for hotel floor teams.",
+    "Your shift, the standards behind it, and the record it builds — the Focus Realm service execution console for hotel floor teams.",
 };
 
 export const viewport: Viewport = {
-  themeColor: "#1c1917",
+  themeColor: "#081527",
   width: "device-width",
   initialScale: 1,
   viewportFit: "cover",
@@ -34,7 +38,7 @@ export default function RootLayout({
   return (
     <html
       lang="en"
-      className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
+      className={`${inter.variable} ${geistMono.variable} h-full antialiased`}
     >
       <body className="flex min-h-full flex-col">
         <AppShell>{children}</AppShell>

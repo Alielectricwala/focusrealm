@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { ChevronRight, Clock, Sparkles } from "lucide-react";
 import FlagChips from "./FlagChips";
+import { Badge, Eyebrow, Panel } from "./ui/kit";
 import { getSop } from "@/lib/data";
 import { STATUS } from "@/lib/ui";
 import type { ShiftTask } from "@/lib/types";
@@ -11,46 +12,40 @@ export default function ShiftTaskCard({ task }: { task: ShiftTask }) {
   const tone = STATUS[task.status];
 
   return (
-    <article className="flex h-full flex-col overflow-hidden rounded-2xl border border-stone-200 bg-white">
-      <div className={`h-1.5 w-full ${tone.solid}`} aria-hidden />
-
+    <Panel as="article" accent={tone.solid} className="flex h-full flex-col">
       <div className="flex flex-1 flex-col gap-3 p-4">
-        <div className="flex items-start gap-3">
-          <div className="min-w-0 flex-1">
-            <p className="text-[11px] font-bold tracking-wide text-stone-400 uppercase">
-              Room
-            </p>
-            <p className="font-mono text-3xl leading-none font-black text-stone-900">
+        <div className="flex items-start justify-between gap-3">
+          <div className="min-w-0">
+            <Eyebrow className="mb-1">Room</Eyebrow>
+            <p className="text-2xl leading-none font-semibold tracking-tight text-ink-900 tnum">
               {task.room}
             </p>
           </div>
 
-          <div className="shrink-0 text-right">
-            <span
-              className={`inline-flex items-center gap-1.5 rounded-full px-2.5 py-1 text-[11px] font-bold ${tone.tint} ${tone.text}`}
-            >
-              <span className={`size-1.5 rounded-full ${tone.solid}`} aria-hidden />
+          <div className="flex shrink-0 flex-col items-end gap-1.5">
+            <Badge tone={tone.badge} dot={tone.solid}>
               {tone.label}
-            </span>
-            <p className="mt-1.5 flex items-center justify-end gap-1 text-xs font-bold text-stone-500">
-              <Clock className="size-3.5" aria-hidden />
+            </Badge>
+            <p className="flex items-center gap-1 text-[11px] font-medium text-ink-500 tnum">
+              <Clock className="size-3.5 text-ink-400" aria-hidden />
               {task.dueAt}
             </p>
           </div>
         </div>
 
         {sop && (
-          <p className="text-sm leading-snug font-semibold text-stone-700">
-            {sop.code} · {sop.title}
+          <p className="text-sm leading-snug font-medium text-ink-700">
+            <span className="font-mono text-xs text-ink-400">{sop.code}</span>{" "}
+            {sop.title}
           </p>
         )}
 
         <FlagChips flags={task.flags} />
 
-        <p className="flex items-start gap-2 rounded-xl bg-amber-50 p-2.5 text-xs leading-snug font-medium text-amber-900">
-          <Sparkles className="mt-0.5 size-4 shrink-0" aria-hidden />
+        <p className="flex items-start gap-2 rounded-lg border border-gold-100 bg-gold-50 p-2.5 text-xs leading-snug text-ink-700">
+          <Sparkles className="mt-0.5 size-3.5 shrink-0 text-gold-600" aria-hidden />
           <span>
-            <span className="font-black">Five-star cue · </span>
+            <span className="font-semibold text-gold-600">Five-star cue · </span>
             {task.fiveStarCue}
           </span>
         </p>
@@ -58,13 +53,13 @@ export default function ShiftTaskCard({ task }: { task: ShiftTask }) {
         {sop && (
           <Link
             href={`/sop/${sop.id}`}
-            className="mt-auto flex min-h-14 items-center justify-between gap-2 rounded-xl bg-stone-900 px-4 text-sm font-bold text-white transition-colors hover:bg-stone-800 active:bg-stone-700"
+            className="mt-auto flex min-h-10 items-center justify-between gap-2 rounded-lg border border-line px-3 text-sm font-semibold text-ink-700 transition-colors hover:border-line-strong hover:bg-canvas"
           >
-            Open SOP
-            <ChevronRight className="size-5 shrink-0" aria-hidden />
+            Open standard
+            <ChevronRight className="size-4 shrink-0 text-ink-400" aria-hidden />
           </Link>
         )}
       </div>
-    </article>
+    </Panel>
   );
 }

@@ -1,6 +1,7 @@
 import { randomBytes } from "node:crypto";
 import { createClient, type SupabaseClient } from "@supabase/supabase-js";
-import type { Candidate } from "./types";
+import type { AgreementPlan, Candidate, TrackDefinition } from "./types";
+import { DEFAULT_TERM_MONTHS } from "./types";
 import { createId, createToken } from "./security.server";
 
 /**
@@ -91,15 +92,22 @@ export async function createCandidate(input: {
   invitedName: string;
   invitedEmail: string;
   track: Candidate["track"];
+  /** Only for roles outside the built-in tracks. */
+  customTrack?: TrackDefinition;
   startDate: string;
+  termMonths?: number;
+  agreement?: AgreementPlan;
 }): Promise<Candidate> {
   const candidate: Candidate = {
     id: createId(),
     token: createToken(),
     track: input.track,
+    ...(input.customTrack ? { customTrack: input.customTrack } : {}),
     invitedName: input.invitedName,
     invitedEmail: input.invitedEmail,
     startDate: input.startDate,
+    termMonths: input.termMonths ?? DEFAULT_TERM_MONTHS,
+    agreement: input.agreement ?? { kind: "standard" },
     createdAt: new Date().toISOString(),
     resources: {},
     tests: {},

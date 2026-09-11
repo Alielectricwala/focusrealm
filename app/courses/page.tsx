@@ -16,6 +16,7 @@ export default function CoursesPage() {
   return (
     <div>
       <PageHeader
+        eyebrow="Enablement"
         title="Courses"
         subtitle="Operating briefs assigned to you, each tied to a standard."
       />
@@ -28,22 +29,22 @@ export default function CoursesPage() {
 
           return (
             <li key={course.id}>
-              <article className="overflow-hidden rounded-2xl border border-stone-200 bg-white">
+              <article className="overflow-hidden rounded-xl border border-line bg-surface">
                 <div
-                  className={`h-1.5 w-full ${passed ? "bg-emerald-500" : "bg-sky-500"}`}
+                  className={`h-1.5 w-full ${passed ? "bg-emerald-600" : "bg-navy-600"}`}
                   aria-hidden
                 />
 
                 <div className="p-4 lg:p-5">
                   <div className="flex flex-wrap items-start justify-between gap-3">
                     <div className="min-w-0">
-                      <h2 className="text-lg leading-snug font-black text-balance text-stone-900">
+                      <h2 className="text-lg leading-snug font-semibold text-balance text-ink-900">
                         {course.title}
                       </h2>
                       {sop && (
                         <Link
                           href={`/sop/${sop.id}`}
-                          className="-mx-2 mt-0.5 inline-flex min-h-14 items-center gap-1 rounded-lg px-2 font-mono text-xs font-bold text-stone-500 hover:bg-stone-100 hover:text-stone-900"
+                          className="-mx-2 mt-0.5 inline-flex min-h-11 items-center gap-1 rounded-lg px-2 font-mono text-xs font-bold text-ink-500 hover:bg-canvas hover:text-ink-900"
                         >
                           {sop.code} · {sop.title}
                           <ChevronRight className="size-3.5" aria-hidden />
@@ -61,7 +62,7 @@ export default function CoursesPage() {
                     </span>
                   </div>
 
-                  <p className="mt-2 text-sm leading-snug text-pretty text-stone-600">
+                  <p className="mt-2 text-sm leading-snug text-pretty text-ink-600">
                     {course.summary}
                   </p>
 
@@ -72,14 +73,14 @@ export default function CoursesPage() {
                         <li key={asset.kind}>
                           <button
                             type="button"
-                            className="flex min-h-14 w-full items-center gap-2.5 rounded-xl bg-stone-100 px-3 text-left hover:bg-stone-200"
+                            className="flex min-h-11 w-full items-center gap-2.5 rounded-xl bg-canvas px-3 text-left hover:bg-canvas"
                           >
-                            <Icon className="size-5 shrink-0 text-stone-600" aria-hidden />
+                            <Icon className="size-5 shrink-0 text-ink-600" aria-hidden />
                             <span className="min-w-0 flex-1">
-                              <span className="block truncate text-sm font-bold text-stone-900">
+                              <span className="block truncate text-sm font-bold text-ink-900">
                                 {asset.label}
                               </span>
-                              <span className="block truncate text-[11px] font-medium text-stone-500">
+                              <span className="block truncate text-[11px] font-medium text-ink-500">
                                 {asset.meta}
                               </span>
                             </span>
@@ -89,8 +90,8 @@ export default function CoursesPage() {
                     })}
                   </ul>
 
-                  <div className="mt-5 border-t border-stone-100 pt-4">
-                    <h3 className="mb-3 text-[11px] font-bold tracking-wide text-stone-400 uppercase">
+                  <div className="mt-5 border-t border-line pt-4">
+                    <h3 className="mb-3 text-[11px] font-bold tracking-wide text-ink-400 uppercase">
                       Readiness check
                     </h3>
                     <ReadinessCheck

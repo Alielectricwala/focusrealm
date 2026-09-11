@@ -15,8 +15,8 @@ export default function FlagChips({
       {flags.map((flag) => (
         <li
           key={flag}
-          className={`rounded-lg font-bold ${FLAG[flag].className} ${
-            size === "md" ? "px-2.5 py-1 text-xs" : "px-2 py-0.5 text-[11px]"
+          className={`rounded-md font-semibold ring-1 ring-inset ${FLAG[flag].className} ${
+            size === "md" ? "px-2 py-1 text-[11px]" : "px-1.5 py-0.5 text-[10px]"
           }`}
         >
           {FLAG[flag].label}

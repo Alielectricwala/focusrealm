@@ -17,21 +17,22 @@ export default function ServiceRecoveryPage() {
     <div className="mx-auto max-w-3xl">
       <Link
         href="/"
-        className="mb-4 inline-flex min-h-14 items-center gap-2 rounded-xl bg-white px-4 text-sm font-bold text-stone-700 ring-1 ring-stone-200 hover:bg-stone-50"
+        className="mb-4 inline-flex min-h-11 items-center gap-2 rounded-xl bg-surface px-4 text-sm font-bold text-ink-700 ring-1 ring-line hover:bg-canvas"
       >
         <ArrowLeft className="size-5" aria-hidden />
         Today
       </Link>
 
       <PageHeader
+        eyebrow="Operations"
         title="Service recovery"
         subtitle="A guest issue in front of you right now — work it in this order."
       />
 
       {/* Spend authorisation */}
-      <section className="mb-5 flex items-center gap-4 rounded-2xl border border-stone-200 bg-stone-900 p-4 text-white">
+      <section className="mb-5 flex items-center gap-4 rounded-xl border border-line bg-navy-800 p-4 text-white">
         <span
-          className="flex size-12 shrink-0 items-center justify-center rounded-xl bg-white/10"
+          className="flex size-12 shrink-0 items-center justify-center rounded-xl bg-surface/10"
           aria-hidden
         >
           <Wallet className="size-6" />
@@ -40,7 +41,7 @@ export default function ServiceRecoveryPage() {
           <p className="text-[11px] font-bold tracking-wide text-white/50 uppercase">
             Your spend authorisation
           </p>
-          <p className="font-mono text-2xl leading-tight font-black">
+          <p className="font-mono text-2xl leading-tight font-semibold">
             {SERVICE_RECOVERY.currency} {SERVICE_RECOVERY.spendLimit}
           </p>
           <p className="mt-0.5 text-xs text-white/60">
@@ -57,24 +58,24 @@ export default function ServiceRecoveryPage() {
           return (
             <li key={step.key}>
               <article
-                className={`overflow-hidden rounded-2xl border bg-white ${
-                  done ? "border-emerald-200" : "border-stone-200"
+                className={`overflow-hidden rounded-xl border bg-surface ${
+                  done ? "border-emerald-200" : "border-line"
                 }`}
               >
                 <header className="flex items-start gap-3 p-4">
                   <span
-                    className={`flex size-11 shrink-0 items-center justify-center rounded-xl font-mono text-base font-black ${
-                      done ? "bg-emerald-500 text-white" : "bg-stone-900 text-white"
+                    className={`flex size-11 shrink-0 items-center justify-center rounded-xl font-mono text-base font-semibold ${
+                      done ? "bg-emerald-600 text-white" : "bg-navy-800 text-white"
                     }`}
                     aria-hidden
                   >
                     {done ? <Check className="size-5" strokeWidth={3} /> : index + 1}
                   </span>
                   <div className="min-w-0 flex-1">
-                    <h2 className="text-lg leading-tight font-black text-stone-900">
+                    <h2 className="text-lg leading-tight font-semibold text-ink-900">
                       {step.title}
                     </h2>
-                    <p className="mt-1 text-sm leading-snug text-pretty text-stone-500">
+                    <p className="mt-1 text-sm leading-snug text-pretty text-ink-500">
                       {step.prompt}
                     </p>
                   </div>
@@ -84,28 +85,28 @@ export default function ServiceRecoveryPage() {
                   {step.actions.map((action) => (
                     <li
                       key={action}
-                      className="flex items-start gap-2.5 rounded-xl bg-stone-50 p-3"
+                      className="flex items-start gap-2.5 rounded-xl bg-canvas p-3"
                     >
                       <span
-                        className="mt-1.5 size-1.5 shrink-0 rounded-full bg-stone-400"
+                        className="mt-1.5 size-1.5 shrink-0 rounded-full bg-ink-400"
                         aria-hidden
                       />
-                      <span className="text-sm leading-snug text-pretty text-stone-700">
+                      <span className="text-sm leading-snug text-pretty text-ink-700">
                         {action}
                       </span>
                     </li>
                   ))}
                 </ul>
 
-                <div className="border-t border-stone-100 p-3">
+                <div className="border-t border-line p-3">
                   <button
                     type="button"
                     aria-pressed={done}
                     onClick={() => toggleRecoveryStep(step.key)}
-                    className={`flex min-h-14 w-full items-center justify-center gap-2 rounded-xl text-sm font-bold ${
+                    className={`flex min-h-11 w-full items-center justify-center gap-2 rounded-xl text-sm font-bold ${
                       done
                         ? "bg-emerald-50 text-emerald-800 ring-1 ring-emerald-200"
-                        : "bg-stone-900 text-white hover:bg-stone-800"
+                        : "bg-navy-800 text-white hover:bg-navy-700"
                     }`}
                   >
                     {done ? (
@@ -125,7 +126,7 @@ export default function ServiceRecoveryPage() {
       </ol>
 
       {doneCount === SERVICE_RECOVERY.steps.length && (
-        <p className="mise-pop mt-4 flex min-h-14 items-center justify-center gap-2.5 rounded-xl bg-emerald-500 px-4 text-base font-black text-white">
+        <p className="mise-pop mt-4 flex min-h-11 items-center justify-center gap-2.5 rounded-xl bg-emerald-600 px-4 text-base font-semibold text-white">
           <LifeBuoy className="size-6" aria-hidden />
           Recovery closed — hand any open promise to the next shift
         </p>
@@ -133,34 +134,34 @@ export default function ServiceRecoveryPage() {
 
       {/* Shared incident timeline */}
       <section aria-labelledby="timeline" className="mt-6">
-        <h2 id="timeline" className="mb-3 text-lg font-black text-stone-900">
+        <h2 id="timeline" className="mb-3 text-lg font-semibold text-ink-900">
           Incident timeline
         </h2>
-        <ol className="overflow-hidden rounded-2xl border border-stone-200 bg-white">
+        <ol className="overflow-hidden rounded-xl border border-line bg-surface">
           {SERVICE_RECOVERY.timeline.map((entry, index) => {
             const last = index === SERVICE_RECOVERY.timeline.length - 1;
             return (
               <li
                 key={entry.id}
-                className={`flex gap-3 p-4 ${last ? "" : "border-b border-stone-100"}`}
+                className={`flex gap-3 p-4 ${last ? "" : "border-b border-line"}`}
               >
                 <div className="flex flex-col items-center">
                   <span
-                    className="size-3 shrink-0 rounded-full bg-stone-300 ring-4 ring-stone-100"
+                    className="size-3 shrink-0 rounded-full bg-line-strong ring-4 ring-line"
                     aria-hidden
                   />
-                  {!last && <span className="mt-1 w-0.5 flex-1 bg-stone-200" aria-hidden />}
+                  {!last && <span className="mt-1 w-0.5 flex-1 bg-line" aria-hidden />}
                 </div>
                 <div className="min-w-0 flex-1">
                   <p className="flex flex-wrap items-baseline gap-x-2">
-                    <span className="font-mono text-sm font-black text-stone-900">
+                    <span className="font-mono text-sm font-semibold text-ink-900">
                       {entry.at}
                     </span>
-                    <span className="text-xs font-bold text-stone-500">
+                    <span className="text-xs font-bold text-ink-500">
                       {entry.actor}
                     </span>
                   </p>
-                  <p className="mt-0.5 text-sm leading-snug text-pretty text-stone-600">
+                  <p className="mt-0.5 text-sm leading-snug text-pretty text-ink-600">
                     {entry.detail}
                   </p>
                 </div>

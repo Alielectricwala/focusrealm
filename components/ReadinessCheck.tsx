@@ -26,11 +26,11 @@ export default function ReadinessCheck({ questions, passed, onPass }: Props) {
 
   if (passed) {
     return (
-      <div className="flex min-h-14 items-center gap-3 rounded-xl bg-emerald-50 px-4 py-3 ring-1 ring-emerald-200">
-        <span className="flex size-9 shrink-0 items-center justify-center rounded-full bg-emerald-500 text-white">
-          <Check className="size-5" strokeWidth={3} aria-hidden />
+      <div className="flex min-h-12 items-center gap-3 rounded-lg border border-emerald-100 bg-emerald-50 px-4 py-3">
+        <span className="flex size-7 shrink-0 items-center justify-center rounded-full bg-emerald-600 text-white">
+          <Check className="size-4" strokeWidth={3} aria-hidden />
         </span>
-        <p className="text-sm font-bold text-emerald-900">Readiness check passed</p>
+        <p className="text-sm font-semibold text-emerald-800">Readiness check passed</p>
       </div>
     );
   }
@@ -43,9 +43,9 @@ export default function ReadinessCheck({ questions, passed, onPass }: Props) {
 
         return (
           <fieldset key={question.id} className="space-y-2">
-            <legend className="mb-2 flex items-start gap-2.5 text-sm font-bold text-stone-900">
+            <legend className="mb-2 flex items-start gap-2.5 text-sm font-semibold text-ink-900">
               <span
-                className="mt-px flex size-6 shrink-0 items-center justify-center rounded-md bg-stone-900 font-mono text-xs text-white"
+                className="mt-px flex size-5 shrink-0 items-center justify-center rounded bg-navy-800 font-mono text-[10px] text-white"
                 aria-hidden
               >
                 {index + 1}
@@ -64,21 +64,21 @@ export default function ReadinessCheck({ questions, passed, onPass }: Props) {
                     setChecked(false);
                     setAnswers((prev) => ({ ...prev, [question.id]: option.id }));
                   }}
-                  className={`flex min-h-14 w-full items-center gap-3 rounded-xl px-3.5 py-2.5 text-left text-sm font-semibold transition-colors ${
+                  className={`flex min-h-11 w-full items-center gap-3 rounded-lg border px-3 py-2.5 text-left text-sm font-medium transition-colors ${
                     selected
                       ? isWrong
-                        ? "bg-rose-50 text-rose-900 ring-2 ring-rose-400"
-                        : "bg-stone-900 text-white"
-                      : "bg-white text-stone-700 ring-1 ring-stone-200 hover:bg-stone-50"
+                        ? "border-rose-300 bg-rose-50 text-rose-800"
+                        : "border-navy-800 bg-navy-800 font-semibold text-white"
+                      : "border-line bg-surface text-ink-700 hover:border-line-strong hover:bg-canvas"
                   }`}
                 >
                   <span
-                    className={`flex size-6 shrink-0 items-center justify-center rounded-full ${
+                    className={`flex size-5 shrink-0 items-center justify-center rounded-full ${
                       selected
                         ? isWrong
-                          ? "bg-rose-500 text-white"
-                          : "bg-white text-stone-900"
-                        : "ring-2 ring-stone-300"
+                          ? "bg-rose-600 text-white"
+                          : "bg-gold-500 text-navy-900"
+                        : "ring-1 ring-line-strong"
                     }`}
                     aria-hidden
                   >
@@ -104,9 +104,9 @@ export default function ReadinessCheck({ questions, passed, onPass }: Props) {
             setAnswers({});
             setChecked(false);
           }}
-          className="flex min-h-14 w-full items-center justify-center gap-2 rounded-xl bg-rose-500 text-sm font-bold text-white active:bg-rose-600"
+          className="flex min-h-11 w-full items-center justify-center gap-2 rounded-lg bg-rose-600 text-sm font-semibold text-white hover:bg-rose-700"
         >
-          <RotateCcw className="size-5" aria-hidden />
+          <RotateCcw className="size-4" aria-hidden />
           {wrong.length} to review — try again
         </button>
       ) : (
@@ -117,7 +117,7 @@ export default function ReadinessCheck({ questions, passed, onPass }: Props) {
             if (wrong.length === 0) onPass();
           }}
           disabled={!allAnswered}
-          className="flex min-h-14 w-full items-center justify-center rounded-xl bg-stone-900 text-sm font-bold text-white disabled:bg-stone-200 disabled:text-stone-400"
+          className="flex min-h-11 w-full items-center justify-center rounded-lg bg-navy-800 text-sm font-semibold text-white transition-colors hover:bg-navy-700 disabled:bg-canvas disabled:text-ink-400"
         >
           Submit readiness check
         </button>

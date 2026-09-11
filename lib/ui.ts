@@ -16,6 +16,7 @@ import {
   Wrench,
   type LucideIcon,
 } from "lucide-react";
+import type { BadgeTone } from "@/components/ui/kit";
 import type {
   BriefAssetKind,
   JobRole,
@@ -30,35 +31,46 @@ import type {
  */
 export const STATUS: Record<
   Status,
-  { solid: string; tint: string; text: string; ring: string; label: string }
+  {
+    solid: string;
+    tint: string;
+    text: string;
+    ring: string;
+    label: string;
+    badge: BadgeTone;
+  }
 > = {
   urgent: {
-    solid: "bg-rose-500",
+    solid: "bg-rose-600",
     tint: "bg-rose-50",
     text: "text-rose-700",
-    ring: "ring-rose-200",
+    ring: "ring-rose-100",
     label: "Due next",
+    badge: "critical",
   },
   active: {
-    solid: "bg-amber-500",
-    tint: "bg-amber-50",
-    text: "text-amber-700",
-    ring: "ring-amber-200",
+    solid: "bg-gold-500",
+    tint: "bg-gold-50",
+    text: "text-gold-600",
+    ring: "ring-gold-100",
     label: "In progress",
+    badge: "gold",
   },
   complete: {
-    solid: "bg-emerald-500",
+    solid: "bg-emerald-600",
     tint: "bg-emerald-50",
     text: "text-emerald-700",
-    ring: "ring-emerald-200",
+    ring: "ring-emerald-100",
     label: "Released",
+    badge: "positive",
   },
   scheduled: {
-    solid: "bg-sky-500",
-    tint: "bg-sky-50",
-    text: "text-sky-700",
-    ring: "ring-sky-200",
+    solid: "bg-navy-600",
+    tint: "bg-canvas",
+    text: "text-ink-500",
+    ring: "ring-line",
     label: "Scheduled",
+    badge: "neutral",
   },
 };
 
@@ -73,12 +85,24 @@ export const PHASE_ORDER: PhaseKey[] = ["prepare", "perform", "verify", "release
 
 /** Guest and service conditions, worn as chips on the task card. */
 export const FLAG: Record<TaskFlag, { label: string; className: string }> = {
-  vip: { label: "VIP", className: "bg-violet-100 text-violet-800" },
-  "family-arrival": { label: "Family arrival", className: "bg-sky-100 text-sky-800" },
-  "late-arrival": { label: "Late arrival", className: "bg-indigo-100 text-indigo-800" },
-  "early-arrival": { label: "Early arrival", className: "bg-teal-100 text-teal-800" },
-  "do-not-enter": { label: "Do not enter", className: "bg-rose-100 text-rose-800" },
-  allergy: { label: "Allergy", className: "bg-amber-100 text-amber-900" },
+  vip: { label: "VIP", className: "bg-gold-50 text-gold-600 ring-gold-100" },
+  "family-arrival": {
+    label: "Family arrival",
+    className: "bg-sky-50 text-sky-700 ring-sky-100",
+  },
+  "late-arrival": {
+    label: "Late arrival",
+    className: "bg-indigo-50 text-indigo-700 ring-indigo-100",
+  },
+  "early-arrival": {
+    label: "Early arrival",
+    className: "bg-teal-50 text-teal-700 ring-teal-100",
+  },
+  "do-not-enter": {
+    label: "Do not enter",
+    className: "bg-rose-50 text-rose-700 ring-rose-100",
+  },
+  allergy: { label: "Allergy", className: "bg-amber-50 text-amber-800 ring-amber-100" },
 };
 
 export const JOB_ROLE_ICON: Record<JobRole, LucideIcon> = {
