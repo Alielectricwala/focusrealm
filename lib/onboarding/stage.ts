@@ -1,6 +1,6 @@
 import { RESOURCES } from "./content";
 import type { Candidate, CandidateView, Stage } from "./types";
-import { STAGE_ORDER } from "./types";
+import { STAGE_ORDER, trackOf } from "./types";
 
 /** Test ids, duplicated from tests.server so client code can count passes. */
 export const TEST_IDS = ["test-focus-realm", "test-recharga"] as const;
@@ -46,6 +46,7 @@ export function toCandidateView(candidate: Candidate): CandidateView {
 
   return {
     track: candidate.track,
+    role: trackOf(candidate),
     invitedName: candidate.invitedName,
     startDate: candidate.startDate,
     stage: currentStage(candidate),

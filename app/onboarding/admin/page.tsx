@@ -14,7 +14,13 @@ import {
   inputClass,
   inputStyle,
 } from "@/components/onboarding/ui";
-import { STAGE_LABEL, TRACK_LABEL, type InternTrack, type Stage } from "@/lib/onboarding/types";
+import {
+  BUILT_IN_TRACKS,
+  STAGE_LABEL,
+  type InternTrack,
+  type Stage,
+  type TrackDefinition,
+} from "@/lib/onboarding/types";
 
 interface Row {
   id: string;
@@ -22,6 +28,7 @@ interface Row {
   invitedName: string;
   invitedEmail: string;
   track: InternTrack;
+  role: TrackDefinition;
   startDate: string;
   stage: Stage;
   fullName: string | null;
@@ -128,7 +135,7 @@ export default function AdminConsole() {
                         {row.fullName ?? row.invitedName}
                       </p>
                       <p className="mt-0.5 text-xs" style={{ color: "var(--fr-muted)" }}>
-                        {TRACK_LABEL[row.track]} · starts {formatDate(row.startDate)} ·{" "}
+                        {row.role.label} · starts {formatDate(row.startDate)} ·{" "}
                         {row.invitedEmail}
                       </p>
                     </div>
@@ -216,6 +223,7 @@ function PasscodeGate({ onDone }: { onDone: () => void }) {
 }
 
 function NewCandidate({ onCreated }: { onCreated: () => void }) {
+  const [track, setTrack] = useState("founders-office");
   const [busy, setBusy] = useState(false);
   const [message, setMessage] = useState<string | null>(null);
   const [link, setLink] = useState<string | null>(null);
@@ -233,8 +241,16 @@ function NewCandidate({ onCreated }: { onCreated: () => void }) {
       body: JSON.stringify({
         invitedName: form.get("invitedName"),
         invitedEmail: form.get("invitedEmail"),
-        track: form.get("track"),
+        track,
         startDate: form.get("startDate"),
+        customRole:
+          track === "custom"
+            ? {
+                label: form.get("customLabel"),
+                roleTitle: form.get("customRoleTitle"),
+                duties: form.get("customDuties"),
+              }
+            : undefined,
       }),
     });
     const data = await response.json();
@@ -290,17 +306,80 @@ function NewCandidate({ onCreated }: { onCreated: () => void }) {
           <Field label="Email">
             <input name="invitedEmail" required type="email" className={inputClass} style={inputStyle} />
           </Field>
-          <Field label="Track">
-            <select name="track" required className={inputClass} style={inputStyle} defaultValue="founders-office">
-              <option value="founders-office">Founder&apos;s Office</option>
-              <option value="marketing">Marketing</option>
-              <option value="business-development">Business Development</option>
+          <Field label="Role">
+            <select
+              name="track"
+              required
+              className={inputClass}
+              style={inputStyle}
+              value={track}
+              onChange={(event) => setTrack(event.target.value)}
+            >
+              {Object.values(BUILT_IN_TRACKS).map((option) => (
+                <option key={option.id} value={option.id}>
+                  {option.label}
+                </option>
+              ))}
+              <option value="custom">Custom role…</option>
             </select>
           </Field>
           <Field label="Start date">
             <input name="startDate" required type="date" className={inputClass} style={inputStyle} />
           </Field>
         </div>
+
+        {track === "custom" && (
+          <div
+            className="space-y-4 rounded-xl border p-4"
+            style={{ borderColor: "var(--fr-line)", backgroundColor: "var(--fr-navy-deep)" }}
+          >
+            <p className="text-xs leading-relaxed" style={{ color: "var(--fr-muted)" }}>
+              A custom role is written into this candidate&apos;s agreement exactly as you
+              enter it here, and is frozen on their record — editing it later cannot change
+              an agreement they have already signed.
+            </p>
+
+            <Field label="Role name" hint='Shown in the portal and the console, e.g. "Design".'>
+              <input
+                name="customLabel"
+                required
+                maxLength={60}
+                placeholder="Design"
+                className={inputClass}
+                style={inputStyle}
+              />
+            </Field>
+
+            <Field
+              label="Role title for the agreement"
+              hint='The title in Clause 1, e.g. "Design Intern".'
+            >
+              <input
+                name="customRoleTitle"
+                required
+                maxLength={80}
+                placeholder="Design Intern"
+                className={inputClass}
+                style={inputStyle}
+              />
+            </Field>
+
+            <Field
+              label="Duties"
+              hint="Completes the sentence “assisting with …” in the duties clause."
+            >
+              <textarea
+                name="customDuties"
+                required
+                rows={3}
+                maxLength={600}
+                placeholder="product and brand design support, design-system upkeep, and asset production for the founding team"
+                className={`${inputClass} resize-y`}
+                style={inputStyle}
+              />
+            </Field>
+          </div>
+        )}
 
         {message && <Notice tone="bad">{message}</Notice>}
 

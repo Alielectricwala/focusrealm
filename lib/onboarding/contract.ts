@@ -1,5 +1,5 @@
-import type { Candidate, InternTrack } from "./types";
-import { TRACK_LABEL } from "./types";
+import type { Candidate } from "./types";
+import { trackOf } from "./types";
 
 /**
  * The internship agreement, generated from the candidate's own details.
@@ -36,21 +36,6 @@ export interface Contract {
   fields: ContractFields;
 }
 
-const ROLE_TITLE: Record<InternTrack, string> = {
-  "founders-office": "Founder's Office Intern",
-  marketing: "Marketing Intern",
-  "business-development": "Business Development Intern",
-};
-
-const ROLE_DUTIES: Record<InternTrack, string> = {
-  "founders-office":
-    "strategic and research support, cross-functional project work, and operational assistance to the founding team",
-  marketing:
-    "content production, campaign support, research, and marketing operations assistance to the founding team",
-  "business-development":
-    "lead research and sourcing, outreach support, pipeline maintenance, and commercial research assistance to the founding team",
-};
-
 const MONTHS = [
   "January", "February", "March", "April", "May", "June",
   "July", "August", "September", "October", "November", "December",
@@ -83,24 +68,25 @@ export function formatAadhaar(digits: string): string {
 export function buildContract(candidate: Candidate): Contract | null {
   if (!candidate.details) return null;
 
+  const role = trackOf(candidate);
   const start = new Date(candidate.startDate);
   const fields: ContractFields = {
     fullName: candidate.details.fullName,
     parentName: candidate.details.parentName,
     aadhaarNumber: candidate.details.aadhaarNumber,
     address: candidate.details.address,
-    roleTitle: ROLE_TITLE[candidate.track],
+    roleTitle: role.roleTitle,
     startDate: start,
     endDate: addMonths(start, 3),
     // The agreement takes effect when the candidate signs it.
     effectiveDate: candidate.signature ? new Date(candidate.signature.signedAt) : new Date(),
   };
 
-  const duties = ROLE_DUTIES[candidate.track];
+  const duties = role.duties;
 
   return {
     title: "Internship Agreement",
-    subtitle: `FocusRealm · ${TRACK_LABEL[candidate.track]} Internship — Unpaid Internship · 3-Month Term`,
+    subtitle: `FocusRealm · ${role.label} Internship — Unpaid Internship · 3-Month Term`,
     preamble: `This Internship Agreement ("Agreement") is made and entered into on this ${formatLongDate(fields.effectiveDate)} (the "Effective Date"),`,
     parties: [
       {

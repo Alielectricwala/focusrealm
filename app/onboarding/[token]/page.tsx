@@ -11,7 +11,7 @@ import StageRail from "@/components/onboarding/StageRail";
 import TestsStage from "@/components/onboarding/TestsStage";
 import { Card, Notice, SectionTitle, Wordmark, formatDate } from "@/components/onboarding/ui";
 import { stageIndex } from "@/lib/onboarding/stage";
-import { TRACK_LABEL, type CandidateView } from "@/lib/onboarding/types";
+import { type CandidateView } from "@/lib/onboarding/types";
 
 /** The candidate's whole onboarding, behind the token in their invite link. */
 export default function CandidatePortal() {
@@ -65,7 +65,7 @@ export default function CandidatePortal() {
   const at = stageIndex(candidate.stage);
 
   return (
-    <Shell subtitle={`${TRACK_LABEL[candidate.track]} internship`}>
+    <Shell subtitle={`${candidate.role.label} internship`}>
       <header className="mb-6">
         <h1 className="text-2xl leading-tight font-bold text-balance sm:text-3xl">
           Welcome, {candidate.details?.fullName ?? candidate.invitedName}.

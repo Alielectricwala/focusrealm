@@ -18,7 +18,7 @@ import {
   inputStyle,
 } from "@/components/onboarding/ui";
 import type { Contract } from "@/lib/onboarding/contract";
-import { STAGE_LABEL, TRACK_LABEL, type Candidate, type Stage } from "@/lib/onboarding/types";
+import { STAGE_LABEL, trackOf, type Candidate, type Stage } from "@/lib/onboarding/types";
 
 interface AdminCandidate extends Omit<Candidate, "mailbox"> {
   stage: Stage;
@@ -99,7 +99,7 @@ export default function AdminCandidatePage() {
           {details?.fullName ?? candidate.invitedName}
         </h1>
         <p className="mt-1.5 text-sm" style={{ color: "var(--fr-muted)" }}>
-          {TRACK_LABEL[candidate.track]} · starts {formatDate(candidate.startDate)} · currently at{" "}
+          {trackOf(candidate).label} · starts {formatDate(candidate.startDate)} · currently at{" "}
           <span style={{ color: "var(--fr-gold-soft)" }}>{STAGE_LABEL[candidate.stage]}</span>
         </p>
       </header>
